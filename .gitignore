@@ -82,3 +82,6 @@ crashlytics-build.properties
 # for vi
 *.swp
 *.swo
+
+# for node_modules
+node_modules

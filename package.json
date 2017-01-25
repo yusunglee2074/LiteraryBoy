@@ -1,0 +1,10 @@
+{
+  "name": "sicamp-server",
+  "description": "sicamp-server",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "async": "^2.1.4",
+    "express": "^4.14.0"
+  }
+}
