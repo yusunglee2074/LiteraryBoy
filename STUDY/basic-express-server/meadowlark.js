@@ -1,5 +1,5 @@
 var express = require('express');
-
+var fortune = require('./lib/fortune.js');
 var app = express();
 // 스태틱 미들웨어 추가
 app.use(express.static(__dirname + '/public'));
@@ -15,19 +15,8 @@ app.get('/', function(req, res){
 		res.render('home');
 });
 
-// 오늘의 운세 리스트
-var fortunes = [
-	'운이 좋당 ㅋㅋ',
-	'운이 좋지 못해',
-	'운이 진짜 좋아',
-	'집밖에 나가지 말 것',
-	'연애운이 100점',
-	'연애운이 0점',
-];
 app.get('/about', function(req, res){
-		var randomFortune = 
-		    fortunes[Math.floor(Math.random() * fortunes.length)];
-		res.render('about', { fortune: randomFortune });
+		res.render('about', { fortune: fortune.getFortune() });
 });
 
 // 커스템 500페이지
