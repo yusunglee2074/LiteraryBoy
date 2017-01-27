@@ -11,12 +11,22 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
 
+// 쿼리스트링에 ?test=1이 들어 있는지 감지할 미들웨어 사용을 위한 미들웨어 추가
+app.use(function(req, res, next){
+		res.locals.showTests = app.get('env') !== 'production' &&
+		    req.query.test === '1';
+		next();
+});
+
 app.get('/', function(req, res){
 		res.render('home');
 });
 
 app.get('/about', function(req, res){
-		res.render('about', { fortune: fortune.getFortune() });
+		res.render('about', { 
+            fortune: fortune.getFortune(),
+			pageTestScript: '/qa/tests-about.js'
+			} );
 });
 
 // 커스템 500페이지
