@@ -1,6 +1,8 @@
 var express = require('express');
 
 var app = express();
+// 스태틱 미들웨어 추가
+app.use(express.static(__dirname + '/public'));
 
 // HTML에 추가적인 컨텐츠를 주입해주는 핸들바 뷰 엔진 설정
 var handlebars = require('express-handlebars')
