@@ -10,7 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.14.0",
-    "express-handlebars": "^3.0.0"
+    "express-handlebars": "^3.0.0",
+    "jshint": "^2.9.4"
   },
   "devDependencies": {
     "chai": "^3.5.0",
