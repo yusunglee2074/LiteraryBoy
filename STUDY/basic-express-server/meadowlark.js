@@ -1,8 +1,17 @@
 var express = require('express');
 var fortune = require('./lib/fortune.js');
+var getWeatherData = require('./lib/getWeatherData.js');
+
 var app = express();
 // 스태틱 미들웨어 추가
 app.use(express.static(__dirname + '/public'));
+
+// 날씨 더미 데이터를 res.locals.partials 객체에 주입할 미들웨어 생성
+app.use(function(req, res, next){
+	if(!res.locals.partials) res.locals.partials = {};
+	res.locals.partials.weatherContext = getWeatherData.getWeatherData();
+	next();
+});
 
 // HTML에 추가적인 컨텐츠를 주입해주는 핸들바 뷰 엔진 설정
 var handlebars = require('express-handlebars')
@@ -18,10 +27,12 @@ app.use(function(req, res, next){
 		next();
 });
 
+// home Page
 app.get('/', function(req, res){
 		res.render('home');
 });
 
+// About 페이지
 app.get('/about', function(req, res){
 		res.render('about', { 
             fortune: fortune.getFortune(),
