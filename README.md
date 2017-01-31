@@ -36,3 +36,13 @@ npm의 디폴트 디렉토리를 변경
 
 2. 터미널에 express 쳐도 'express: command not found' 란 오류 메세지만 나옴
 ~/.zshrc 에 express 설치 폴더 안의 bin폴더를 PATH에 추가해줌
+
+
+
+#### 책 진행
+
+1~7장 진행
+
+8장(form처리) 패스
+
+9장 쿠키와 섹션 진행
