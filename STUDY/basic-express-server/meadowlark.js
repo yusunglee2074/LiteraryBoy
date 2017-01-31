@@ -14,8 +14,16 @@ app.use(function(req, res, next){
 });
 
 // HTML에 추가적인 컨텐츠를 주입해주는 핸들바 뷰 엔진 설정
-var handlebars = require('express-handlebars')
-	.create({ defaultLayout:'main' });
+var handlebars = require('express-handlebars').create({
+	defaultLayout:'main',
+	helpers: {
+		section: function(name, options){
+			if(!this._sections) this._sections = {};
+			this._sections[name] = options.fn(this);
+			return null;
+		}
+	}
+});
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
