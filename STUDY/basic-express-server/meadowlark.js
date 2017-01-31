@@ -60,6 +60,9 @@ app.use(function(req, res, next){
 // 스태틱 미들웨어 추가
 app.use(express.static(__dirname + '/public'));
 
+// body-parser 미들웨어
+app.use(require('body-parser').urlencoded({ extended: true}));
+
 // 날씨 더미 데이터를 res.locals.partials 객체에 주입할 미들웨어 생성
 app.use(function(req, res, next){
 	if(!res.locals.partials) res.locals.partials = {};
@@ -101,6 +104,20 @@ app.get('/about', function(req, res){
 			pageTestScript: '/qa/tests-about.js'
 			} );
 });
+
+// 이메일 주소를 받는 폼 페이지
+app.get('/newsletter', function(req, res){
+	res.render('newsletter', { csrf: 'CSRF token goes here' });
+});
+
+app.post('/process', function(req, res){
+	console.log('Form (from querystring): ' + req.query.form);
+	console.log('CSRF token (from hidden form field): ' + req.body._csrf);
+	console.log('Name (from visible form field): ' + req.body.name);
+	console.log('Email (from visible form field): ' + req.body.email);
+	res.redirect(303, '/thank-you');
+});
+	
 
 // 에러를 발생시켜 보자.
 app.get('/fail', function(req, res){
