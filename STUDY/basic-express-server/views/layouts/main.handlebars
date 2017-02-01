@@ -10,10 +10,17 @@
 	<script src="//code.jquery.com/jquery-2.0.2.min.js"></script>
 	{{{_section.head}}}
 	<link rel="stylesheet" href="{{__dirname}}/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" href="{{__dirname}}bootstrap/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="{{__dirname}}/bootstrap/css/bootstrap-theme.min.css">
 	<script src="{{__dirname}}/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
+	{{#if flash}}
+	    <div class="alert alert-dismissible alert-{{flash.type}}">
+			<button class="close" type='button' 
+			    data-dismiss="alert" aria-hidden='true'>&times;</button>
+			<strong>{{flash.intro}}</strong> {{{flash.message}}}
+	    </div>
+	{{/if}}
 	<header><img src="{{__dirname}}/img/logo.jpg" alt="Meadowlark Travel Logo"> </header>
 	<div class="container">
 		{{{ body }}}	

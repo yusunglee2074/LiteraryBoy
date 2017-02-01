@@ -85,3 +85,9 @@ crashlytics-build.properties
 
 # for node_modules
 node_modules
+
+# for data(이미지 업로드 데이터 저장 예제)
+data/
+
+# credentail
+credentials.*

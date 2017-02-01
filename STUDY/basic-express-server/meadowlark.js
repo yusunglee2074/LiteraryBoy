@@ -3,6 +3,7 @@ var fortune = require('./lib/fortune.js');
 var getWeatherData = require('./lib/getWeatherData.js');
 var app = express();
 var formidable = require('formidable');
+var fs = require('fs')
 
 // 환경별 로거를 불러오는 것을 다르게함. 
 switch(app.get('env')){
@@ -15,6 +16,17 @@ switch(app.get('env')){
 		}));
 		break;
 }
+
+// 쿠키 시크릿 연결
+var credentials = require('./credentials.js');
+app.use(require('cookie-parser')(credentials.cookieSecret));
+
+// 익스프레서 세션설 치후 express-session 연결
+app.use(require('express-session')({
+	resave: false,
+	saveUninitialized: false,
+	secret: credentials.cookieSecret
+}));
 
 // 도메인(영역)을 이용한 에러가 일어나더라도 서버를 우아하게 닫아버리는 미들웨어
 app.use(function(req, res, next){
@@ -61,6 +73,15 @@ app.use(function(req, res, next){
 // 스태틱 미들웨어 추가
 app.use(express.static(__dirname + '/public'));
 
+// 세션을 이용한 플래시 메세지 구현
+// flash 객체가 있다면 뷰에 추가하게 만든다. 플래시 메세지를 표시했다면
+// 세션에서 제거 해서 다음 요청에는 표시되지 않게 한다.
+app.use(function(req, res, next){
+	res.locals.flash = req.session.flash;
+	delete req.session.flash;
+	next();
+});
+
 // body-parser 미들웨어
 app.use(require('body-parser').urlencoded({ extended: true}));
 
@@ -93,6 +114,7 @@ app.use(function(req, res, next){
 		next();
 });
 
+
 // home Page
 app.get('/', function(req, res){
 		res.render('home');
@@ -119,6 +141,17 @@ app.post('/process', function(req, res){
 	res.redirect(303, '/thank-you');
 });
 
+// 노드의 파일 시스템 예제
+// 디렉터리가 존재하는지 확인하고 없으면 만든다.
+var dataDir = __dirname + '/data';
+var vacationPhotoDir = dataDir + '/vacation-photo';
+fs.existsSync(dataDir) || fs.mkdirSync(dataDir);
+fs.existsSync(vacationPhotoDir) || fs.mkdirSync(vacationPhotoDir);
+
+function saveContestEntry(contestName, email, year, month, photoPath){
+	// pass
+}
+
 // 이미지를 받을 수 있는 페이지 formidable 사용함!
 app.get('/contest/vacation-photo', function(req,res){
 	var now = new Date();
@@ -130,12 +163,28 @@ app.get('/contest/vacation-photo', function(req,res){
 app.post('/contest/vacation-photo/:year/:month', function(req, res){
 	var form = new formidable.IncomingForm();
 	form.parse(req, function(err, fields, files){
-		if(err) return res.redirect(303, '/error');
-		console.log('received fields:');
-		console.log(fields);
-		console.log('received files:');
-		console.log(files);
-		res.redirect(303, '/thank-you');
+		if(err) {
+			res.session.flash = {
+				type: 'danger',
+				intro: 'Oops!',
+				message: 'There was an error processing your submission. ' +
+				    'Please try again.',
+			};
+			return res.redirect(303, '/contest/vacation-photo');
+		}
+		var photo = files.photo;
+		var dir = vacationPhotoDir + '/' + Date.now();
+		var path = dir + '/' + photo.name;
+		fs.mkdirSync(dir);
+		fs.renameSync(photo.path, dir + '/' + photo.name);
+		saveContestEntry('vacation-photo', fields.email,
+		   req.params.year, req.params.month, path);
+		req.session.flash = {
+			type: 'success',
+			intro: 'Good luck!',
+			message: '콘테스트에 들어오셨어영',
+		};
+		return res.redirect(303, '/contest/vacation-photo/entries');
 	});
 });
 
