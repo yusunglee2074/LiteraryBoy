@@ -2,6 +2,7 @@ var express = require('express');
 var fortune = require('./lib/fortune.js');
 var getWeatherData = require('./lib/getWeatherData.js');
 var app = express();
+var formidable = require('formidable');
 
 // 환경별 로거를 불러오는 것을 다르게함. 
 switch(app.get('env')){
@@ -117,7 +118,26 @@ app.post('/process', function(req, res){
 	console.log('Email (from visible form field): ' + req.body.email);
 	res.redirect(303, '/thank-you');
 });
-	
+
+// 이미지를 받을 수 있는 페이지 formidable 사용함!
+app.get('/contest/vacation-photo', function(req,res){
+	var now = new Date();
+	res.render('contest/vacation-photo', {
+		year: now.getFullYear(), month: now.getMonth()
+	});
+});
+
+app.post('/contest/vacation-photo/:year/:month', function(req, res){
+	var form = new formidable.IncomingForm();
+	form.parse(req, function(err, fields, files){
+		if(err) return res.redirect(303, '/error');
+		console.log('received fields:');
+		console.log(fields);
+		console.log('received files:');
+		console.log(files);
+		res.redirect(303, '/thank-you');
+	});
+});
 
 // 에러를 발생시켜 보자.
 app.get('/fail', function(req, res){
@@ -128,6 +148,11 @@ app.get('/epic-fail', function(req, res){
 	process.nextTick(function(){
 		throw new Error('퍼겊거헉허거헢퍼!!!!!서버터지는소리');
 	});
+});
+
+// thank-you 페이지
+app.get('/thank-you', function(req, res){
+	res.render('thank-you');
 });
 
 // 커스템 500페이지
