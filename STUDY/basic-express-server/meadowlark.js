@@ -70,6 +70,26 @@ app.use(function(req, res, next){
 	domain.run(next);
 });
 
+
+// 데이터베이스 설정
+var mongoose = require('mongoose');
+var opts = {
+	server: {
+		socketOptions: { keepAlive: 1 }
+	}
+};
+switch(app.get('env')){
+	case 'development':
+	    mongoose.connect(credentials.mongo.development.connectionString, opts);
+		break;
+	case 'production':
+	    mongoose.connect(credentials.mongo.production.connectionString, opts);
+		break;
+	default:
+	    throw new Error('Unknown execution environment: ' + apt.get('env'));
+}
+	
+
 // 스태틱 미들웨어 추가
 app.use(express.static(__dirname + '/public'));
 
