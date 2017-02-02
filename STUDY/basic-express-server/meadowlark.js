@@ -28,6 +28,9 @@ app.use(require('express-session')({
 	secret: credentials.cookieSecret
 }));
 
+// body-parser 미들웨어
+app.use(require('body-parser').urlencoded({ extended: true}));
+
 // 도메인(영역)을 이용한 에러가 일어나더라도 서버를 우아하게 닫아버리는 미들웨어
 app.use(function(req, res, next){
 	// 이 요청을 처리할 도메인 생성
@@ -88,7 +91,91 @@ switch(app.get('env')){
 	default:
 	    throw new Error('Unknown execution environment: ' + apt.get('env'));
 }
-	
+
+// 실습을 위한 초기 데이터 데이터베이스에 쓰기
+var Vacation = require('./models/vacation.js');
+Vacation.find(function(err, vacations){
+    if(vacations.length) return;
+	console.log('베케이션 만들기 시작')
+
+    new Vacation({
+        name: 'Hood River Day Trip',
+        slug: 'hood-river-day-trip',
+        category: 'Day Trip',
+        sku: 'HR199',
+        description: 'Spend a day sailing on the Columbia and ' + 
+            'enjoying craft beers in Hood River!',
+        priceInCents: 9995,
+        tags: ['day trip', 'hood river', 'sailing', 'windsurfing', 'breweries'],
+        inSeason: true,
+        maximumGuests: 16,
+        available: true,
+        packagesSold: 0,
+    }).save();
+
+    new Vacation({
+        name: 'Oregon Coast Getaway',
+        slug: 'oregon-coast-getaway',
+        category: 'Weekend Getaway',
+        sku: 'OC39',
+        description: 'Enjoy the ocean air and quaint coastal towns!',
+        priceInCents: 269995,
+        tags: ['weekend getaway', 'oregon coast', 'beachcombing'],
+        inSeason: false,
+        maximumGuests: 8,
+        available: true,
+        packagesSold: 0,
+    }).save();
+
+    new Vacation({
+        name: 'Rock Climbing in Bend',
+        slug: 'rock-climbing-in-bend',
+        category: 'Adventure',
+        sku: 'B99',
+        description: 'Experience the thrill of rock climbing in the high desert.',
+        priceInCents: 289995,
+        tags: ['weekend getaway', 'bend', 'high desert', 'rock climbing', 'hiking', 'skiing'],
+        inSeason: true,
+        requiresWaiver: true,
+        maximumGuests: 4,
+        available: false,
+        packagesSold: 0,
+        notes: 'The tour guide is currently recovering from a skiing accident.',
+    }).save();
+});
+
+// notify-me-when-season 라우터 핸들러
+var VacationInSeasonListener = require('./models/vacationInSeasonListener.js');
+
+app.get('/notify-me-when-in-season', function(req, res){
+	res.render('notify-me-when-in-season', { sku: req.query.sku });
+});
+
+app.post('/notify-me-when-in-season', function(req, res){
+    VacationInSeasonListener.update(
+        { email: req.body.email }, 
+        { $push: { skus: req.body.sku } },
+        { upsert: true },
+	    function(err){
+	        if(err) {
+	        	console.error(err.stack);
+	            req.session.flash = {
+	                type: 'danger',
+	                intro: 'Ooops!',
+	                message: 'There was an error processing your request.',
+	            };
+	            return res.redirect(303, '/vacations');
+	        }
+	        req.session.flash = {
+	            type: 'success',
+	            intro: 'Thank you!',
+	            message: 'You will be notified when this vacation is in season.',
+	        };
+	        return res.redirect(303, '/vacations');
+	    }
+	);
+});
+
 
 // 스태틱 미들웨어 추가
 app.use(express.static(__dirname + '/public'));
@@ -102,8 +189,6 @@ app.use(function(req, res, next){
 	next();
 });
 
-// body-parser 미들웨어
-app.use(require('body-parser').urlencoded({ extended: true}));
 
 // 날씨 더미 데이터를 res.locals.partials 객체에 주입할 미들웨어 생성
 app.use(function(req, res, next){
@@ -222,6 +307,25 @@ app.get('/epic-fail', function(req, res){
 // thank-you 페이지
 app.get('/thank-you', function(req, res){
 	res.render('thank-you');
+});
+
+// 현재 예약 가능한 패키지만 보여주기
+app.get('/vacations', function(req, res){
+	console.log('1')
+	Vacation.find({ available: true }, function(err, vacations){
+		var context = {
+			vacations: vacations.map(function(vacation){
+				return {
+					sku: vacation.sku,
+					name: vacation.name,
+					description: vacation.description,
+					price: vacation.getDisplayPrice(),
+					inSeason: vacation.inSeason,
+				}
+			})
+		};
+		res.render('vacations', context);
+	});
 });
 
 // 커스템 500페이지

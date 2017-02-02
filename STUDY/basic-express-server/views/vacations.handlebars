@@ -1,0 +1,14 @@
+<h1>Vacations</h1>
+{{#each vacations}}
+	<div class="vacation">
+		<h3>{{name}}</h3>
+		<p>{{description}}</p>
+		{{#if inSeason}}
+			<span class="price">{{price}}</span>
+			<a class="btn btn-default" href="/cart/add?sku={{sku}}">Buy Now!</a>
+		{{else}}
+			<span class="outOfSeason">이번 시즌의 여행이 아닙니다. ㅠㅠ</span>
+			<a href="/notify-me-when-in-season?sku={{sku}}">재고가 들어오면 연락받기</a>
+		{{/if}}
+	</div>
+{{/each}}
