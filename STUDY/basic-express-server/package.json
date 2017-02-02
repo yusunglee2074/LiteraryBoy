@@ -20,7 +20,8 @@
     "jshint": "^2.9.4",
     "loadtest": "^2.2.1",
     "mongoose": "^4.8.1",
-    "morgan": "^1.7.0"
+    "morgan": "^1.7.0",
+    "session-mongoose": "^0.5.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
