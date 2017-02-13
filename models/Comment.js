@@ -1,4 +1,7 @@
 const sequelize = require('.index');
+const User = require('.User');
+const Book = require('.Book');
+const HashTag = require('.HashTag');
 
 module.exports = function(sequelize, DataTypes) {
 	const Comment = sequelize.define('comment', {
