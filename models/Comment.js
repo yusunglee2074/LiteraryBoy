@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
 			associate: function(models) {
 				Comment.hasOne(User, {as: 'comment_userid'}),
 				Comment.hasOne(Book, {as: 'comment_bookid'}),
-				Comment.hasOne(HashTag, {as: 'comment_hastag'})
+				Comment.belongsToMany(HashTag, {through: "comment_hash"})
 			},
 		};
 	});
