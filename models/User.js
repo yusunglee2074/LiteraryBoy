@@ -1,5 +1,6 @@
-const sequelize = require('.index');
-const ReadBook = require('.Read_book');
+const sequelize = require('./index');
+const ReadBook = require('./Read_book');
+const Comment = require('./Comment');
 
 module.exports = function(sequelize, DataTypes) {
 	const User = sequelize.define('user', {
@@ -15,6 +16,7 @@ module.exports = function(sequelize, DataTypes) {
 				// 특수문자 허용안되게 기능추가해야함 
 				},
 		},
+        // FIXME: 사용자가 어떤 토큰으로 인증했는지 정보가 있으면 api 응답할때 더 쉬울 듯 합니다.
 		facebooktoken: {
 			type: Sequelize.STRING,
 			field: 'facebook_token',
@@ -37,6 +39,7 @@ module.exports = function(sequelize, DataTypes) {
 				// 유저에 readbooksid 속성이 생긴다.
 				// 유저는 getreadbooks 혹은 setreadbooks 로 읽있는 책 모델 하나를 가져올 수 있다.
 				User.hasMany(Readbook, {as: 'readbooks'})
+				User.hasMany(Comment, {as: 'comments'})
 			},
 		}
 	});
