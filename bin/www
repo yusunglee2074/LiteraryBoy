@@ -8,6 +8,9 @@ var app = require('../app');
 var debug = require('debug')('literaryperiods:server');
 var http = require('http');
 var config = require('../config/config.json');
+// 모델폴더를 모듈로 가져온다.
+var models = require('../models');
+
 
 /**
  * Get port from environment and store in Express.
@@ -27,9 +30,18 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+
+// server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+
+// sequelize의 싱크 작업을 시작하고 완료되면 설정된 포트를 통해 통신이 가능하도록 한다.
+models.sequelize.sync().then(function () {
+	sever.listen(app.get('port'), function() {
+		debung('익스프레스가 다음의 포트에서 기다리고 있습니다.' + server.address().port);
+	});
+});
 
 /**
  * Normalize a port into a number, string, or false.

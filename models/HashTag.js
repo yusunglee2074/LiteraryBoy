@@ -1,6 +1,6 @@
-const sequelize = require('.index');
-const User = require('.User');
-const Comment = require('.Comment');
+const sequelize = require('./index');
+const User = require('./User');
+const Comment = require('./Comment');
 
 module.exports = function(sequelize, DataTypes) {
 	const HashTag = sequelize.define('hashtag', {

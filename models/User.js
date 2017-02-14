@@ -1,5 +1,5 @@
-const sequelize = require('.index');
-const ReadBook = require('.Read_book');
+const sequelize = require('./index');
+const ReadBook = require('./Read_book');
 
 module.exports = function(sequelize, DataTypes) {
 	const User = sequelize.define('user', {
