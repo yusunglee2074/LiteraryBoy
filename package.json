@@ -14,13 +14,14 @@
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
     "sequelize": "^3.30.2",
+    "sequelize-cli": "^2.5.1",
     "serve-favicon": "~2.3.0"
   },
   "main": "app.js",
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=devel node ./bin/www",
+    "start": "DEBUG=devel node ./bin/www",
     "start:devel": "NODE_ENV=devel node ./bin/www",
     "start:prod": "NODE_ENV=prod node ./bin/www"
   },
