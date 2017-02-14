@@ -3,32 +3,32 @@ const sequelize = require('./index')
 module.exports = function(sequelize, DataTypes) {
 	const Book = sequelize.define('book', {
 		title: {
-			type: Sequelize.STRING,
+			type: sequelize.STRING,
 			allowNull: False,
 			field: 'title',
 		},
 		page: {
-			type: Sequelize.INTEGER,
+			type: sequelize.INTEGER,
 			field: 'page',
 		},
 		booksummary: {
-			type: Sequelize.TEXT,
+			type: sequelize.TEXT,
 			field: 'summary',
 		},
 		tableofcontents: {
-			type: Sequelize.TEXT,
+			type: sequelize.TEXT,
 			field: 'contents',
 		},
 		author: {
-			type: Sequelize.STRING,
+			type: sequelize.STRING,
 			field: 'author',
 		},
 		publisher: {
-			type: Sequelize.STRING,
+			type: sequelize.STRING,
 			field: 'publisher',
 		},
 		thumbnailimage: {
-			type: Sequelize.STRING,
+			type: sequelize.STRING,
 			field: 'thumbnail_image_path'
 		}
 		} 
