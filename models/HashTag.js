@@ -14,7 +14,6 @@ module.exports = function(sequelize, DataTypes) {
 	}, {
 		classMethods: {
 			associate: function(models) {
-				HashTag.hasMany(User, {as: 'hashtag_user'})
 				HashTag.belogsToMany(Comment, {through: "comment_hash"})
 			};
 		};

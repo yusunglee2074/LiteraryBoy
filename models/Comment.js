@@ -1,6 +1,4 @@
 const sequelize = require('./index');
-const User = require('./User');
-const Book = require('./Book');
 const HashTag = require('./HashTag');
 
 module.exports = function(sequelize, DataTypes) {
@@ -38,10 +36,6 @@ module.exports = function(sequelize, DataTypes) {
 			type: Sequelize.BOOLEAN,
 			defaultValue: true,
 			field: 'is_text',
-		},
-		remind: {
-			type: Sequelize.BOOLEAN,
-			field: 'remind',
 		},
 		favorite: {
 			type: Sequelize.BOOLEAN,

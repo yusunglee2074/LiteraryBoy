@@ -27,6 +27,10 @@ module.exports = function(sequelize, DataTypes) {
 			type: Sequelize.STRING,
 			field: 'publisher',
 		},
+		thumbnailimage: {
+			type: Sequelize.STRING,
+			field: 'thumbnail_image_path'
+		}
 		} 
 	);
 	return ReadBook

@@ -14,8 +14,9 @@ module.exports = function(sequelize, DataTypes) {
     }, {
 		classMethods: {
 			associate: function(models) {
-				// ReadBook에게 bookid라는 속성이 생긴다.
-				ReadBook.belongsTo(Book)
+				// 유저 칼럼 추가
+				ReadBook.belongsTo(Book),
+				ReadBook.belongsTo(User)
 			},
 		}
 	});

@@ -17,17 +17,14 @@ module.exports = function(sequelize, DataTypes) {
 				},
 		},
         // FIXME: 사용자가 어떤 토큰으로 인증했는지 정보가 있으면 api 응답할때 더 쉬울 듯 합니다.
-		facebooktoken: {
+		// FIXED: 어떤 토큰으로 인증했는지 항목 추가하겠습니다.
+		tokentype: {
 			type: Sequelize.STRING,
-			field: 'facebook_token',
+			field: 'token_type'
 		},
-		navertoken: {
+		tokenvalue: {
 			type: Sequelize.STRING,
-			field: 'naver_token',
-		},
-		kakaotoken: {
-			type: Sequelize.STRING,
-			field: 'kakao_token',
+			field: 'token_value',
 		},
 		profileimage: {
 			type: Sequelize.STRING,
@@ -38,8 +35,8 @@ module.exports = function(sequelize, DataTypes) {
 			associate: function(models) {
 				// 유저에 readbooksid 속성이 생긴다.
 				// 유저는 getreadbooks 혹은 setreadbooks 로 읽있는 책 모델 하나를 가져올 수 있다.
-				User.hasMany(Readbook, {as: 'readbooks'})
-				User.hasMany(Comment, {as: 'comments'})
+				// User.hasMany(Readbook, {as: 'readbooks'})
+				// User.hasMany(Comment, {as: 'comments'})
 			},
 		}
 	});
