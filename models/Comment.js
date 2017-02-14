@@ -5,30 +5,56 @@ const HashTag = require('./HashTag');
 
 module.exports = function(sequelize, DataTypes) {
 	const Comment = sequelize.define('comment', {
-		text: {
-			type: Sequelize.STRING,
-			allowNull: False,
-			field: 'comment',
-			validate: {
-				len: [1,150],
-			    },
+		// primary key가 없으면 자동으로 id 칼럼을 생성하고 primary key로 삼는다.
+		// createdAt, updatedAt 자동으로 생성된다.
+
+		parentCommentId: {
+			type: Sequelize.INTEGER,
+			allowNull: true,
+			defaultValue: null,
+			field: 'parent_comment_id',
 		},
-		bookpage: {
+		content: {
+			type: Sequelize.TEXT,
+			field: 'content',
+		},
+		theme: {
+			type: Sequelize.STRING,
+			field: 'theme',
+		},
+		align: {
+			type: Sequelize.STRING,
+			field: 'align',
+		},
+		page: {
 			type: Sequelize.INTEGER,
 			field: 'page',
 		},
-		reminddate: {
-			type: Sequlize.DATE,
-			field: 'remind_date',
+		imagePath: {
+			type: Sequelize.STRING,
+			field: 'image_path',
 		},
+		isText: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: true,
+			field: 'is_text',
+		},
+		remind: {
+			type: Sequelize.BOOLEAN,
+			field: 'remind',
+		},
+		favorite: {
+			type: Sequelize.BOOLEAN,
+			field: 'favorite',
+		}
+	},	{
 	}, {
 		classMethods: {
 			associate: function(models) {
-				Comment.hasOne(User, {as: 'comment_userid'}),
-				Comment.hasOne(Book, {as: 'comment_bookid'}),
 				Comment.belongsToMany(HashTag, {through: "comment_hash"})
-			},
-		};
+				},
+			};
+		}
 	});
 	return Comment;
 };
