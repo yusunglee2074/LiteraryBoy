@@ -5,31 +5,14 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: false,
 			field: 'title',
 		},
-		page: {
-			type: DataTypes.INTEGER,
-			field: 'page',
-		},
-		booksummary: {
-			type: DataTypes.TEXT,
-			field: 'summary',
-		},
-		tableofcontents: {
-			type: DataTypes.TEXT,
-			field: 'contents',
-		},
-		author: {
+		isbn13: {
 			type: DataTypes.STRING,
-			field: 'author',
+			field: 'isbn13',
 		},
-		publisher: {
-			type: DataTypes.STRING,
-			field: 'publisher',
-		},
-		thumbnailimage: {
-			type: DataTypes.STRING,
-			field: 'thumbnail_image_path'
+		raw: {
+			type: DataTypes.JSON,
+			field: 'raw',
 		}
-		} 
-	);
+    });
 	return Book
 };
