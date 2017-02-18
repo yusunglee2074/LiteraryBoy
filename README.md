@@ -10,11 +10,18 @@
 
 ### config
 * 개발환경
-    * language : node.js 6.9.4
+    * node.js: 6.9.4
 * 배포환경
+    * node.js: 6.9.4
+* 실행방법
+```
+npm start
+# or npm run start:devel
+# package.json 참고
+```
 
 
-### feature/express-skeleton
+### 
 
 #### Express - 튜토리얼
 설치 [x]

@@ -21,9 +21,13 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "DEBUG=devel node ./bin/www",
-    "start:devel": "NODE_ENV=devel node ./bin/www",
-    "start:prod": "NODE_ENV=prod node ./bin/www"
+    "start": "NODE_ENV=devel DB_ENV=yusung node ./bin/www",
+    "start:devel": "NODE_ENV=devel DB_ENV=devel node ./bin/www",
+    "start:devel-remote": "NODE_ENV=devel DB_ENV=devel_remote node ./bin/www",
+    "start:prod": "NODE_ENV=prod DB_ENV=prod node ./bin/www",
+
+    "start:yusung": "NODE_ENV=devel DB_ENV=yusung node ./bin/www",
+    "start:jihoon": "NODE_ENV=devel DB_ENV=jihoon node ./bin/www"
   },
   "repository": {
     "type": "git",

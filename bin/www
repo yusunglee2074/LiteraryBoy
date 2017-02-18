@@ -5,18 +5,20 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('devel');
+var debug = require('debug')('literaryperiods:server');
 var http = require('http');
 // 모델폴더를 모듈로 가져온다.
 var models = require('../models');
+var appConfig = require('../config/app.json');
 
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(appConfig[process.env.NODE_ENV].port || '3011');
 app.set('port', port);
+console.log("listening " + port + " ...");
 
 /**
  * Create HTTP server.

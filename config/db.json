@@ -1,0 +1,37 @@
+{
+	"prod": {
+		"host" : "localhost",
+		"port" : "5432",
+		"db" : "literary_periods",
+		"user" : "literary_periods",
+		"password" : "literary_periods"
+	},
+	"devel": {
+		"host" : "localhost",
+		"port" : "5432",
+		"db" : "lp_dev",
+		"user" : "lp_dev_user",
+		"password" : "literary_periods"
+	},
+	"yusung": {
+		"host" : "localhost",
+		"port" : "5432",
+		"db" : "book",
+		"user" : "postgres",
+		"password" : "3030"
+	},
+	"devel_remote": {
+		"host" : "jangdock.cafe24.com",
+		"port" : "5432",
+		"db" : "lp_dev",
+		"user" : "lp_dev_user",
+		"password" : "sicamp36"
+	},
+	"jihoon": {
+		"host" : "jangdock.cafe24.com",
+		"port" : "5432",
+		"db" : "lp_dev",
+		"user" : "jihoon",
+		"password" : "sicamp36"
+	}
+}
