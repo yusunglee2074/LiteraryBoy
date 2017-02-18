@@ -1,8 +1,14 @@
 {
-	"prod": {
-		"port" : 8001
-	},
-	"devel": {
-		"port" : 3011
-	}
+    "prod": {
+        "port" : 8001,
+        "api": {
+            "daum" : "877d563f1e5953dace1d88b6e675d78e"
+        }
+    },
+    "devel": {
+        "port" : 3011,
+        "api": {
+            "daum" : "846b27e534c10bce39055515f75d57a7"
+        }
+    }
 }
