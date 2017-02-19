@@ -16,7 +16,7 @@
 	"yusung": {
 		"host" : "localhost",
 		"port" : "5432",
-		"db" : "book",
+		"db" : "yusung",
 		"user" : "postgres",
 		"password" : "3030"
 	},
@@ -27,10 +27,17 @@
 		"user" : "lp_dev_user",
 		"password" : "sicamp36"
 	},
+	"yusung_remote": {
+		"host" : "jangdock.cafe24.com",
+		"port" : "5432",
+		"db" : "lp_dev_yusung",
+		"user" : "yusung",
+		"password" : "sicamp"
+	},
 	"jihoon": {
 		"host" : "jangdock.cafe24.com",
 		"port" : "5432",
-		"db" : "lp_dev",
+		"db" : "lp_dev_jihoon",
 		"user" : "jihoon",
 		"password" : "sicamp36"
 	}

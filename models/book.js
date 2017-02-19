@@ -1,39 +1,17 @@
 module.exports = function(sequelize, DataTypes) {
-	const Book = sequelize.define('Book', {
+	return sequelize.define('Book', {
 		title: {
 			type: DataTypes.STRING,
 			allowNull: false,
 			field: 'title',
 		},
-		page: {
-			type: DataTypes.INTEGER,
-			field: 'page',
-		},
-		isbn: {
-			type: DataTypes.INTEGER,
-			field: 'isbn_13',
-		},
-		author: {
+		isbn13: {
 			type: DataTypes.STRING,
-			field: 'author',
+			field: 'isbn13',
 		},
-		publisher: {
-			type: DataTypes.STRING,
-			field: 'publisher',
-		},
-		thumbnailimage: {
-			type: DataTypes.STRING,
-			field: 'thumbnail_image_path'
-		},
-		highimage: {
-			type: DataTypes.STRING,
-			field: 'high_image_path',
-		},
-		published_date: {
-			type: DataTypes.DATE,
-			field: 'published_date',
-		},
-		} 
-	);
-	return Book
+		raw: {
+			type: DataTypes.JSON,
+			field: 'raw',
+		}
+    });
 };
