@@ -19,11 +19,11 @@ module.exports = function(sequelize, DataTypes) {
     },  {
         classMethods: {
             associate: function(models) {
-                Comment.belongsToMany(models.Hashtag, {through: 'post_hash'}),
-                Comment.belongsTo(models.User),
+                Post.belongsToMany(models.Hashtag, {through: 'post_hash'}),
+                Post.belongsTo(models.User)
                 }
             }
         });
-    return Comment;
+    return Post;
 };
 
