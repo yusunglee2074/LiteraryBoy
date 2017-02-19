@@ -16,7 +16,7 @@
 	"yusung": {
 		"host" : "localhost",
 		"port" : "5432",
-		"db" : "book",
+		"db" : "yusung",
 		"user" : "postgres",
 		"password" : "3030"
 	},
