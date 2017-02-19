@@ -13,6 +13,7 @@ router.all('/test', function(req, res, next) {
         }
     });
 });
+/*
 router.all('/bookId/:isbn/my', function(req, res, next) {
     res.send({
         uri : req.baseUrl + req.path,
@@ -35,5 +36,7 @@ router.all('/bookId/:isbn/other', function(req, res, next) {
         }
     });
 });
+
+*/
 
 module.exports = router;
