@@ -40,7 +40,7 @@ router.get('/search', function(req, res, next) {
     });
 });
 
-router.post('/book/:ISBN13', function(req, res) {
+router.post('/:ISBN13', function(req, res) {
 	// if 이미 추가된 책인가? (유저 id와 isbn13의 값으로 검증)
 	    // 추가 된 책이면 추가 됬다고 안내
 	// 추가 된 책이 아닐시 유저 id와 책 ISBN을 받아서 Readbook 오브젝트를 만든다.
@@ -80,9 +80,7 @@ router.post('/book/:ISBN13', function(req, res) {
 	});
 });
 
-// api 명세에 읽은책 추가나 삭제에 대한 내용이 없어서 임의로 집어 넣었습니다.
-// 유저 id와 isbn13을 가지고 삭제 한다.
-router.delete('/book/:ISBN13', function(req, res) {
+router.delete('/:ISBN13', function(req, res) {
 	Model.Readbook.findOne({
 		// 실제 코드
 		/*
@@ -105,5 +103,21 @@ router.delete('/book/:ISBN13', function(req, res) {
 	});
 });
 
+router.get('/all', function(req, res) {
+	Model.Readbook.findAll({
+		// 실제 코드
+		/*
+		"where": {
+			"UserId": req.header.user_token
+		}
+		*/
+		// 테스트용 임의 코드
+		"where": {
+			"UserId": 1
+		}
+	}).then(function(allbook) {
+			res.send(allbook)
+	})
+});
 
 module.exports = router;
