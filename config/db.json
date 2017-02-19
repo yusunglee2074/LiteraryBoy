@@ -30,7 +30,7 @@
 	"jihoon": {
 		"host" : "jangdock.cafe24.com",
 		"port" : "5432",
-		"db" : "lp_dev",
+		"db" : "lp_dev_jihoon",
 		"user" : "jihoon",
 		"password" : "sicamp36"
 	}
