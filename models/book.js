@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-	const Book = sequelize.define('Book', {
+	return sequelize.define('Book', {
 		title: {
 			type: DataTypes.STRING,
 			allowNull: false,
@@ -14,5 +14,4 @@ module.exports = function(sequelize, DataTypes) {
 			field: 'raw',
 		}
     });
-	return Book
 };
