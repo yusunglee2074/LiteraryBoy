@@ -3,7 +3,7 @@
 var fs        = require("fs");
 var path      = require("path");
 var Sequelize = require("sequelize");
-var dbConfig = require("../config/db.json")[process.env.DB_ENV];
+var dbConfig = require("../config/db.json")['yusung'];
 
 const sequelize = new Sequelize(dbConfig.db, dbConfig.user, dbConfig.password, {
     host: dbConfig.host,

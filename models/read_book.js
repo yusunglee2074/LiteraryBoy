@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
 			field: 'reading_page',
 		},
 		isbn13: {
-			type: DataTypes.INTEGER,
+			type: DataTypes.STRING,
 			field: 'isbn13',
 		},
     }, {
