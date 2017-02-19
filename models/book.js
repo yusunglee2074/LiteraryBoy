@@ -24,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
 		thumbnailimage: {
 			type: DataTypes.STRING,
 			field: 'thumbnail_image_path'
-		}
+		},
 		highimage: {
 			type: DataTypes.STRING,
 			field: 'high_image_path',

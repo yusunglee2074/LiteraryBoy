@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
 			associate: function(models) {
 				Comment.belongsToMany(models.Hashtag, {through: 'comment_hash'}),
 				Comment.belongsTo(models.User),
-				Comment.belongsTo(models.Post),
+				Comment.belongsTo(models.Post)
 				}
 			}
 		});
