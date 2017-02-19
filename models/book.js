@@ -9,13 +9,9 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.INTEGER,
 			field: 'page',
 		},
-		booksummary: {
-			type: DataTypes.TEXT,
-			field: 'summary',
-		},
-		tableofcontents: {
-			type: DataTypes.TEXT,
-			field: 'contents',
+		isbn: {
+			type: DataTypes.INTEGER,
+			field: 'isbn_13',
 		},
 		author: {
 			type: DataTypes.STRING,
@@ -29,6 +25,14 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			field: 'thumbnail_image_path'
 		}
+		highimage: {
+			type: DataTypes.STRING,
+			field: 'high_image_path',
+		},
+		published_date: {
+			type: DataTypes.DATE,
+			field: 'published_date',
+		},
 		} 
 	);
 	return Book

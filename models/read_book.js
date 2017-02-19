@@ -8,6 +8,10 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.DATE,
 			field: 'read_end_date',
 		},
+		readpage: {
+			type: DataTypes.INTEGER,
+			field: 'reading_page',
+		},
     }, {
 		classMethods: {
 			associate: function(models) {
