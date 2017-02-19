@@ -41,7 +41,7 @@ router.get('/search', function(req, res, next) {
 });
 
 router.post('/book/add', function(req, res) {
-	// if 이미 추가된 책인가?
+	// if 이미 추가된 책인가? (유저 id와 isbn13의 값으로 검증)
 	    // 추가 된 책이면 추가 됬다고 안내
 	// 추가 된 책이 아닐시 유저 id와 책 ISBN을 받아서 Readbook 오브젝트를 만든다.
 	Model.Book.findOne({
@@ -73,9 +73,37 @@ router.post('/book/add', function(req, res) {
 				"isbn13": book.get("isbn13"),
 				"BookId": book.get("id"),
 				"UserId": user.get("id"),
-			})
+			}).then(function(readbook) {
+				res.send(readbook)
+			});
 		});
 	});
 });
+
+// api 명세에 읽은책 추가나 삭제에 대한 내용이 없어서 임의로 집어 넣었습니다.
+// 유저 id와 isbn13을 가지고 삭제 한다.
+router.delete('/book/delete', function(req, res) {
+	Model.Readbook.findOne({
+		// 실제 코드
+		/*
+		"where": {
+			"UserId": req.query.tokenvalue,
+			"isbn13": req.query.isbn
+		}
+		*/
+		// 테스트용 임의 값
+		"where": {
+			"UserId": 1,
+			"isbn13": "9788968480652"
+		}
+	}).then(function(readbook) {
+		readbook.destroy()
+	}).then(function() {
+		res.send('삭제성공')
+	}).catch(function() {
+		res.send('삭제실패')
+	});
+});
+
 
 module.exports = router;
