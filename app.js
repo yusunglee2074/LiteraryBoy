@@ -12,7 +12,7 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var apiV1Test = require('./routes/api_v1');
-var apiV1 = require('./routes/api/v1/book');
+var apiV1Book = require('./routes/api/v1/book');
 
 var app = express();
 // Express 함수 "express()"를 호출해 변수 app에 담는다.
@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/api/v1', apiV1Test);
-app.use('/api/v1/', apiV1);
+app.use('/api/v1/book', apiV1Book);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
