@@ -44,7 +44,11 @@ router.get('/search', function(req, res) {
             }, function() {
                 res.send({
                     "message": {
-                        "result": respArr
+                        "result": {
+                            "bookList": {
+                                "books": respArr
+                            }
+                        }
                     }
                 });
             });
