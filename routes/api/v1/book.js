@@ -26,7 +26,8 @@ router.get('/search', function(req, res) {
                     "bookId"       : item.isbn13,
                     "name"         : item.title,
                     "author"       : item.author,
-                    "totalPage"    : "",
+                    "pub_nm"       : item.pub_nm,
+                    "pub_date"     : item.pub_date,
                     "thumbnailUrl" : item.cover_l_url
                 });
 
