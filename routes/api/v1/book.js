@@ -42,8 +42,11 @@ router.get('/search', function(req, res) {
 
                 callback(null);
             }, function() {
-                res.send(
-                        respArr);
+                res.send({
+                    "message": {
+                        "result": respArr
+                    }
+                });
             });
         } else {
             res.send([]);
