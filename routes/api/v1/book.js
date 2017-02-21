@@ -27,7 +27,7 @@ router.get('/search', function(req, res) {
                     "name"         : item.title,
                     "author"       : item.author,
                     "pub_nm"       : item.pub_nm,
-                    "pub_date"     : item.pub_date,
+                    "pub_date"     : new Date( item.pub_date.substr(0,4), item.pub_date.substr(4,2) - 1, item.pub_date.substr(6,2) ),
                     "thumbnailUrl" : item.cover_l_url
                 });
 
