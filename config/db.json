@@ -4,41 +4,47 @@
 		"port" : "5432",
 		"db" : "literary_periods",
 		"user" : "literary_periods",
-		"password" : "literary_periods"
+		"password" : "literary_periods",
+		"re-init" : false
 	},
 	"devel": {
 		"host" : "localhost",
 		"port" : "5432",
 		"db" : "lp_dev",
-		"user" : "lp_dev_user",
-		"password" : "literary_periods"
+		"user" : "jihoon",
+		"password" : "sicamp36",
+		"re-init" : false
 	},
 	"yusung": {
 		"host" : "localhost",
 		"port" : "5432",
 		"db" : "yusung1",
 		"user" : "postgres",
-		"password" : "3030"
+		"password" : "3030",
+		"re-init" : false
 	},
 	"devel_remote": {
 		"host" : "jangdock.cafe24.com",
 		"port" : "5432",
 		"db" : "lp_dev",
 		"user" : "lp_dev_user",
-		"password" : "sicamp36"
+		"password" : "sicamp36",
+		"re-init" : false
 	},
 	"yusung_remote": {
 		"host" : "jangdock.cafe24.com",
 		"port" : "5432",
 		"db" : "lp_dev_yusung",
 		"user" : "yusung",
-		"password" : "sicamp"
+		"password" : "sicamp",
+		"re-init" : false
 	},
 	"jihoon": {
 		"host" : "jangdock.cafe24.com",
 		"port" : "5432",
 		"db" : "lp_dev_jihoon",
 		"user" : "jihoon",
-		"password" : "sicamp36"
+		"password" : "sicamp36",
+		"re-init" : true
 	}
 }
