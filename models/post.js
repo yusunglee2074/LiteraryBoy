@@ -29,11 +29,17 @@ module.exports = function(sequelize, DataTypes) {
                 }
             },
 		instanceMethods: {
-		  toJSON: function () {
+		  toJSON: function (models) {
 			var values = this.get();
 			if (this.Readbook) {
-			  values.lastcomment = "";
-              delete values.Readbook
+				var Comment = sequelize.models.Comment;
+				if(Comment.findOne({"where": {'PostId': this.get('id')}}) == null) {
+					values.lastcomment = Comment.findOne({"where": {'PostId': this.get('id')}}); 
+				}
+				else {
+					values.lastcomment = "코멘트가 없습니다."
+				}
+                delete values.Readbook
 			}
 			return values;
 		  }
