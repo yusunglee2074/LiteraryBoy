@@ -7,6 +7,10 @@ var sequelize = require('sequelize')
 
 
 router.post('/:ISBN13/text', function(req, res) {
+    var hastag = [];
+	hashtag.push(req.body.hashtag);
+	// 해쉬태그를 # 마다 쪼개서 딕셔너리로 만든다.
+	var hashdict = {};
 	Model.Readbook.findOne({
 		// 실제코드
 		/*
@@ -16,6 +20,7 @@ router.post('/:ISBN13/text', function(req, res) {
 		// 개발 임의 코드
 		"where": {
 			"id": "1"
+			"UserId": req.head.token_value
 		}
 		}).then(function(book) {
 			Model.Post.create({
@@ -26,7 +31,6 @@ router.post('/:ISBN13/text', function(req, res) {
 				"page": req.body.page, 
 				//if 해쉬태그가 있다면...?
 				// thorugh 테이블이 있다면 생성방법에 대해 검색해봐야함.
-				"hashtag": req.body.hashtag,
 				"UserId": book.UserId,
 				"BookId": book.isbn13,
 
