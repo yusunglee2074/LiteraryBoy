@@ -45,3 +45,67 @@ router.post('/:ISBN13/text', function(req, res) {
 	});
 });
 
+router.delete('/:postid', function(req, res) {
+	Model.Post.findOne({
+		"where": {
+			"UserId": req.head.token_value,
+			"id": req.params['postid']
+		}
+	}).then(function(post) {
+		post.destroy()
+	}).then(function() {
+		// Readbook 삭제와 똑같이 오류 처리 해야함
+		res.send({
+			"message": "삭제성공했습니다."
+		});
+	});
+});
+
+router.get('/all', function(req, res) {
+	// 자신의 모든 포스트 출력
+	// if 책 id도 같이 온다면 해당 책 id의 자신의 포스트만 출력 
+	// if 유저 토큰이 빈값, 책 id만 온다면 해당 책 포스트만 모두 출력
+	Model.Post.findAll({
+		"where": {
+			"UserId": req.head.token_value
+		}
+	}).then(function(post) {
+		res.send({
+			"message": {
+				"result": {
+					"post": {
+						"posts": post 
+					 }
+				 }
+			}
+		});
+	});
+});
+
+router.put('/:postid', function(req, res) {
+	Model.Post.findOne({
+		"where": {
+			"UserId": req.head.token_value,
+			"id": req.params["postid"]
+		}
+	}).then(function(post) {
+		post.update({
+			content: req.body.content,
+			page: req.body.page,
+			// 이미지 처리 방법을 아직 모른다.
+			imagepath: req.body.image,
+			theme: req.body.theme
+		}).then(function() {
+			res.send({
+				"message": {
+					"result": {
+						"post": {
+							"posts": post 
+						 }
+					}
+				}
+			});
+		});
+	});
+})
+		
