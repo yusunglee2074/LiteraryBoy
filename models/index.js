@@ -34,6 +34,18 @@ Object.keys(db).forEach(function(modelName) {
   }
 });
 
+if (dbConfig["re-init"]) {
+    sequelize.sync({force:true}).then(function() {
+        console.log('db sync forced');
+        // TODO: add indexes
+        // TODO: load dummy data
+    });
+} else {
+    sequelize.sync().then(function() {
+        console.log('db sync');
+    });
+}
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
