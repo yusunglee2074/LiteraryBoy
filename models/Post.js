@@ -16,11 +16,16 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING,
             field: 'theme',
         },
+        page: {
+            type: DataTypes.INTEGER,
+            field: 'page',
+        },
     },  {
         classMethods: {
             associate: function(models) {
                 Post.belongsToMany(models.Hashtag, {through: 'post_hash'}),
-                Post.belongsTo(models.User)
+                Post.belongsTo(models.User),
+				Post.belongsTo(models.Readbook)
                 }
             }
         });
