@@ -84,26 +84,26 @@ router.post('/:ISBN13', function(req, res) {
 			"where": {
 				"id": "1"
 			}
-		}).then(function(user) {
-			Model.Readbook.create({
-				"readstartdate": sequelize.fn('now'),
-				"readenddate": null,
-				"reading_page": 0,
-				"isbn13": book.get("isbn13"),
-				"BookId": book.get("id"),
-				"UserId": user.get("tokenvalue"),
-			}).then(function(readbook) {
-                res.send({
-                    "message": {
-                        "result": {
-                            "bookList": {
-                                "books": readbook 
-							 }
+			});
+	}).then(function(user) {
+		Model.Readbook.create({
+			"readstartdate": sequelize.fn('now'),
+			"readenddate": null,
+			"reading_page": 0,
+			"isbn13": book.get("isbn13"),
+			"BookId": book.get("id"),
+			"UserId": user.get("tokenvalue"),
+		});
+	}).then(function(readbook) {
+			res.send({
+				"message": {
+					"result": {
+						"bookList": {
+							"books": readbook 
 						 }
 					 }
-				})
-			});
-		});
+				 }
+			})
 	});
 });
 
