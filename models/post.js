@@ -27,8 +27,18 @@ module.exports = function(sequelize, DataTypes) {
                 Post.belongsTo(models.User),
 				Post.belongsTo(models.Readbook)
                 }
-            }
-        });
+            },
+		instanceMethods: {
+		  toJSON: function () {
+			var values = this.get();
+			if (this.Readbook) {
+			  values.lastcomment = "";
+              delete values.Readbook
+			}
+			return values;
+		  }
+		}
+	});
     return Post;
 };
 
