@@ -7,7 +7,7 @@ var sequelize = require('sequelize')
 
 
 router.post('/:ISBN13/text', function(req, res) {
-	Model.Book.findOne({
+	Model.Readbook.findOne({
 		// 실제코드
 		/*
 		"where": {
@@ -24,10 +24,19 @@ router.post('/:ISBN13/text', function(req, res) {
 				"imagepath": null,
 				"theme": req.body.theme,
 				"page": req.body.page, 
-				// if 해시태그가 이미 들어 있다면
-				"hashtaghh": user.get("tokenvalue"),
-			}).then(function(readbook) {
-				res.send(readbook)
+				//if 해쉬태그가 있다면...?
+				// thorugh 테이블이 있다면 생성방법에 대해 검색해봐야함.
+				"hashtag": req.body.hashtag,
+				"UserId": book.UserId,
+				"BookId": book.isbn13,
+
+			}).then(function(post) {
+                res.send({
+                    "message": {
+                        "result": {
+                            "Post": post 
+						 }
+					 }
 		});
 	});
 });
