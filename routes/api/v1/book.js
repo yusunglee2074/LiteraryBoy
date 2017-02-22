@@ -84,26 +84,26 @@ router.post('/:ISBN13', function(req, res) {
 			"where": {
 				"id": "1"
 			}
-			});
 	}).then(function(user) {
 		Model.Readbook.create({
 			"readstartdate": sequelize.fn('now'),
 			"readenddate": null,
 			"reading_page": 0,
-			"isbn13": book.get("isbn13"),
-			"BookId": book.get("isbn13"),
-			"UserId": user.get("tokenvalue"),
-		});
-	}).then(function(readbook) {
+			"isbn13": book.get('isbn13'),
+			"BookId": book.get('id'),
+			"UserId": user.get('id')
+		}).then(function(readbook) {
 			res.send({
 				"message": {
 					"result": {
 						"bookList": {
-							"books": readbook 
+							"addbook": readbook 
+							 }
 						 }
 					 }
-				 }
-			})
+				});
+			});
+		});
 	});
 });
 
@@ -119,23 +119,20 @@ router.delete('/:ISBN13', function(req, res) {
 		// 테스트용 임의 값
 		"where": {
 			"UserId": 1,
-			"isbn13": "9788968480652"
+			"isbn13": "9791133426898"
 		}
 	}).then(function(readbook) {
-		try {
-			readbook.destroy()
-		}
-		// 오류 일때 오류 내용 표기하고싶은데 잘 모르겠습니다 ㅠㅠ
-		catch(exception) {
-			res.send({
-				"message": "삭제에 실패했습니다."
-			})
-		}
-	}).then(function() {
-			res.send({
-				"message": "삭제성공했습니다."
-			});
+		readbook.destroy()
+		res.send({
+			"message": "삭제 성공."
+		})
+	}).catch(function(err) {
+		// 오류 처리를 하는법 공부해서 리팩토링해야된다.
+		res.send({
+			"message":  "삭제실패.",
+			"err": "해당 값의 책이 없습니다." 
 		});
+	});
 });
 
 router.get('/all', function(req, res) {
@@ -151,7 +148,15 @@ router.get('/all', function(req, res) {
 			"UserId": 1
 		}
 	}).then(function(allbook) {
-			res.send(allbook)
+		res.send({
+			"message": {
+				"result": {
+					"bookList": {
+						"books": allbook 
+						 }
+					 }
+				}
+		});
 	})
 });
 
