@@ -10,8 +10,8 @@
 		"host" : "localhost",
 		"port" : "5432",
 		"db" : "lp_dev",
-		"user" : "lp_dev_user",
-		"password" : "literary_periods"
+		"user" : "jihoon",
+		"password" : "sicamp36"
 	},
 	"yusung": {
 		"host" : "localhost",
