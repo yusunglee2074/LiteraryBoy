@@ -105,13 +105,13 @@ router.get('/:ISBN13/my', function(req, res) {
 			"where": {
 				"UserId": user.get('id') 
 			},
-			"include": {
-			    "model": Model.Readbook,
+			"include": 
+			{
+				"model": Model.Readbook,
 				"where": { 'isbn13': req.params['ISBN13'] }
-			    }	
-		}).then(function(post) {
-		console.log(post);
-		res.send({
+			},
+	}).then(function(post) {
+		res.json({
 			"message": {
 				"result": {
 					"post": {
