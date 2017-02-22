@@ -72,7 +72,7 @@ router.post('/:ISBN13', function(req, res) {
 				"reading_page": 0,
 				"isbn13": book.get("isbn13"),
 				"BookId": book.get("id"),
-				"UserId": user.get("id"),
+				"UserId": user.get("tokenvalue"),
 			}).then(function(readbook) {
 				res.send(readbook)
 			});
@@ -119,5 +119,25 @@ router.get('/all', function(req, res) {
 			res.send(allbook)
 	})
 });
+
+router.get('/:ISBN13', function(req, res) {
+	Model.Readbook.findOne({
+		// 실제 코드
+		/*
+		"where": {
+			"UserId": req.header.user_token,
+			"isbn13": req.params['ISBN13']
+		}
+		*/
+		// 테스트용 임의 코드
+		"where": {
+			"UserId": 1,
+			"isbn13": "9788968480652"
+		}
+	}).then(function(book) {
+		res.send(book)
+	})
+});
+
 
 module.exports = router;
