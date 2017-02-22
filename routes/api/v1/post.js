@@ -6,118 +6,120 @@ var Model = require('../../../models');
 var sequelize = require('sequelize')
 
 
-router.post('/:ISBN13/text', function(req, res) {
+router.post('/:ISBN13/text/add', function(req, res) {
     var hastag = [];
-	hashtag.push(req.body.hashtag);
 	// 해쉬태그를 # 마다 쪼개서 딕셔너리로 만든다.
 	var hashdict = {};
 	Model.Readbook.findOne({
-		// 실제코드
-		/*
 		"where": {
-			"isbn13": req.params['ISBN13']
-		*/
-		// 개발 임의 코드
-		"where": {
-			"id": "1",
-			"UserId": req.head.token_value
+			"isbn13": req.params['ISBN13'],
+			"UserId": '1' 
 		}
 	}).then(function(book) {
+		console.log(book);
+		console.log("hello");
 		Model.Post.create({
 			"content": req.body.content,
 			"likecount": 0,
 			"imagepath": null,
 			"theme": req.body.theme,
 			"page": req.body.page, 
-			//if 해쉬태그가 있다면...?
+			// if 해쉬태그가 있다면...? 아직 해쉬태그 추가 구현 안함
 			// thorugh 테이블이 있다면 생성방법에 대해 검색해봐야함.
-			"UserId": book.UserId,
-			"BookId": book.isbn13,
-
-		})
-	}).then(function(post) {
+			"UserId": book.get('UserId'),
+			"ReadbookId": book.get('id')
+		}).then(function(post) {
 			res.send({
 				"message": {
 					"result": {
-						"Post": post 
+						"Post": post
 					 }
 				 }
+			});
 		});
 	});
 });
 
-router.post('/:ISBN13/iamge', function(req, res) {
-	var hashtag = [];
-	hashtag.push(req.body.hashtag);
+router.post('/:ISBN13/image/add', function(req, res) {
+    var hastag = [];
 	// 해쉬태그를 # 마다 쪼개서 딕셔너리로 만든다.
 	var hashdict = {};
 	Model.Readbook.findOne({
-		// 실제코드
-		/*
 		"where": {
-			"isbn13": req.params['ISBN13']
-		*/
-		// 개발 임의 코드
-		"where": {
-			"id": "1",
-			"UserId": req.head.token_value
+			"isbn13": req.params['ISBN13'],
+			"UserId": '1' 
 		}
 	}).then(function(book) {
+		console.log(book);
+		console.log("hello");
 		Model.Post.create({
 			"content": req.body.content,
 			"likecount": 0,
-			// 이미지 처리 코드 추가해야함!!
-			"imagepath": req.file.image,
+			"imagepath": null,
 			"theme": req.body.theme,
 			"page": req.body.page, 
-			//if 해쉬태그가 있다면...?
+			// if 해쉬태그가 있다면...? 아직 해쉬태그 추가 구현 안함
 			// thorugh 테이블이 있다면 생성방법에 대해 검색해봐야함.
-			"UserId": book.UserId,
-			"BookId": book.isbn13,
-
-		})
-	}).then(function(post) {
+			"UserId": book.get('UserId'),
+			"ReadbookId": book.get('id')
+		}).then(function(post) {
 			res.send({
 				"message": {
 					"result": {
-						"Post": post 
+						"Post": post
 					 }
 				 }
+			});
 		});
 	});
 });
 
-router.delete('/:ISBN13/:postId', function(req, res) {
+router.delete('/:postId/remove', function(req, res) {
 	Model.Post.findOne({
 		"where": {
-			"ReadbookId": req.params['ISBN13']
-			"id": req.params['postid']
+			"id": req.params['postId']
 		}
 	}).then(function(post) {
+		// if post가 null이면  삭제 실패
+		console.log("@@@@@@@@@@@@" + post);
 		post.destroy()
-	}).then(function() {
+		res.send({
+			"message": "삭제 성공."
+		})
+	}).catch(function() {
 		// Readbook 삭제와 똑같이 오류 처리 해야함
 		res.send({
-			"message": "삭제성공했습니다."
+			"message": "삭제실패."
 		});
 	});
 });
 
-router.get('/:ISBN13', function(req, res) {
-	// 지금은 책에 대한 모든 코멘트를 가져오며, 추후 scope에 따른 if문 돌려야함.
-	Model.Post.findAll({
+router.get('/:ISBN13/my', function(req, res) {
+	Model.User.findOne({
 		"where": {
-			"ReadbookId": req.params['ISBN13']
+			//"tokenvalue": req.header.token_value
+			"id": "1"
 		}
-	}).then(function(post) {
+	}).then(function(user) {
+		Model.Post.findAll({
+			"where": {
+				"UserId": user.get('id') 
+			},
+			"include": {
+			    "model": Model.Readbook,
+				"where": { 'isbn13': req.params['ISBN13'] }
+			    }	
+		}).then(function(post) {
+		console.log(post);
 		res.send({
 			"message": {
 				"result": {
 					"post": {
 						"posts": post 
+						 }
 					 }
-				 }
-			}
+				}
+			});
 		});
 	});
 });
@@ -145,8 +147,8 @@ router.put('/:postid', function(req, res) {
 						 }
 					}
 				}
-			});
 		});
 	});
-})
-		
+});
+
+module.exports = router;
