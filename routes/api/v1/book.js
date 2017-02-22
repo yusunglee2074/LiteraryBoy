@@ -91,9 +91,17 @@ router.post('/:ISBN13', function(req, res) {
 				"reading_page": 0,
 				"isbn13": book.get("isbn13"),
 				"BookId": book.get("id"),
-				"UserId": user.get("tokenvalue"),
+				"UserId": user.get("id"),
 			}).then(function(readbook) {
-				res.send(readbook)
+                res.send({
+                    "message": {
+                        "result": {
+                            "bookList": {
+                                "books": readbook 
+							 }
+						 }
+					 }
+				})
 			});
 		});
 	});
@@ -114,12 +122,20 @@ router.delete('/:ISBN13', function(req, res) {
 			"isbn13": "9788968480652"
 		}
 	}).then(function(readbook) {
-		readbook.destroy()
+		try {
+			readbook.destroy()
+		}
+		// 오류 일때 오류 내용 표기하고싶은데 잘 모르겠습니다 ㅠㅠ
+		catch(exception) {
+			res.send({
+				"message": "삭제에 실패했습니다."
+			})
+		}
 	}).then(function() {
-		res.send('삭제성공')
-	}).catch(function() {
-		res.send('삭제실패')
-	});
+			res.send({
+				"message": "삭제성공했습니다."
+			});
+		});
 });
 
 router.get('/all', function(req, res) {
@@ -154,8 +170,16 @@ router.get('/:ISBN13', function(req, res) {
 			"isbn13": "9788968480652"
 		}
 	}).then(function(book) {
-		res.send(book)
-	})
+		res.send({
+			"message": {
+				"result": {
+					"bookList": {
+						"books": book 
+					 }
+				 }
+			 }
+		})
+	});
 });
 
 
