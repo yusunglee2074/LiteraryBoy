@@ -91,7 +91,7 @@ router.post('/:ISBN13', function(req, res) {
 			"readenddate": null,
 			"reading_page": 0,
 			"isbn13": book.get("isbn13"),
-			"BookId": book.get("id"),
+			"BookId": book.get("isbn13"),
 			"UserId": user.get("tokenvalue"),
 		});
 	}).then(function(readbook) {
