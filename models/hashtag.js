@@ -8,6 +8,7 @@ module.exports = function(sequelize, DataTypes) {
 		classMethods: {
             associate: function(models) {
                 Hashtag.belongsToMany(models.Comment, {through: 'comment_hash'})
+                Hashtag.belongsToMany(models.Post, {through: 'post_hash'})
                 }
             }
         });
