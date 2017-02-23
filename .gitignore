@@ -85,3 +85,5 @@ crashlytics-build.properties
 
 # for node_modules
 node_modules
+
+.upload/
