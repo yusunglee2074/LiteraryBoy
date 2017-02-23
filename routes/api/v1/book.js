@@ -26,7 +26,8 @@ router.get('/search', function(req, res) {
                     "bookId"       : item.isbn13,
                     "name"         : item.title,
                     "author"       : item.author,
-                    "totalPage"    : "",
+                    "pub_nm"       : item.pub_nm,
+                    "pub_date"     : Math.round(new Date(item.pub_date.substr(0,4), item.pub_date.substr(4,2) - 1, item.pub_date.substr(6,2)).getTime()/1000),
                     "thumbnailUrl" : item.cover_l_url
                 });
 
@@ -41,7 +42,15 @@ router.get('/search', function(req, res) {
 
                 callback(null);
             }, function() {
-                res.send(respArr);
+                res.send({
+                    "message": {
+                        "result": {
+                            "bookList": {
+                                "books": respArr
+                            }
+                        }
+                    }
+                });
             });
         } else {
             res.send([]);
