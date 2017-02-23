@@ -82,6 +82,7 @@ router.post('/:ISBN13', function(req, res) {
             // 유저의 토큰으로 유저를 찾을 시에
             "where": {
                 "tokenvalue": req.header.user_token
+            }
             // 개발 단계 임의 유저
             /*
             "where": {

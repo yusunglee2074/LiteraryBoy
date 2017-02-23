@@ -3,7 +3,7 @@ var router = express.Router();
 var multer = require('multer');
 var upload = multer({ dest: 'upload/' })
 var path = require('path');
-var appConfig = require('./config/app.json')[process.env.NODE_ENV];
+var appConfig = require('../config/app.json')[process.env.NODE_ENV];
 
 /* GET home page. */
 router.get('/image/:name', function(req, res, next) {
