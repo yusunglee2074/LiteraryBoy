@@ -2,8 +2,6 @@ var express = require('express');
 var async = require('async');
 var router = express.Router();
 var Model = require('../../../models');
-var multer = require('multer');
-var upload = multer({ dest: 'upload/' })
 var sequelize = require('sequelize')
 
 router.post('/:ISBN13/text/add', function(req, res) {
