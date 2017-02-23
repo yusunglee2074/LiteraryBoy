@@ -8,7 +8,15 @@
     "devel": {
         "port" : 3011,
         "api": {
-            "daum" : "846b27e534c10bce39055515f75d57a7"
+            "DAUM" : "846B27E534C10BCE39055515F75D57A7"
         }
+    },
+    "avoidAcl": {
+        "GET": [
+            "/"
+        ],
+        "POST": [
+            "/api/v1/user"
+        ]
     }
 }
