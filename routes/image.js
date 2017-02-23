@@ -6,7 +6,7 @@ var path = require('path');
 var appConfig = require('./config/app.json')[process.env.NODE_ENV];
 
 /* GET home page. */
-router.get('/:name', function(req, res, next) {
+router.get('/image/:name', function(req, res, next) {
     // console.log(req.params['name']);
 
     // console.log(__dirname + "/../upload/" + req.params['name']);
@@ -16,7 +16,7 @@ router.get('/:name', function(req, res, next) {
 
 
 
-router.post('/add', upload.single('file'), function (req, res, next) {
+router.post('/api/v1/image/add', upload.single('file'), function (req, res, next) {
     // console.log(req.file);
     res.send("http://" + appConfig.hostname + ":" + appConfig.port + "/image/" + req.file.filename);
 });
