@@ -1,5 +1,4 @@
 var express = require('express');
-var async = require('async');
 var router = express.Router();
 var Model = require('../../../models');
 var sequelize = require('sequelize')
@@ -9,10 +8,12 @@ router.post('/', function(req, res) {
 		// "token_type": req.body.token_type,
 		"nickname": req.body.nickname,
 		// 프로필 파일 어디에 올리고 그 주소를 어떻게 가져올 것인가?
-		"profile_image_path": null,
+		"profile_image_path": req.body.imageUrl,
 		"userid": req.body.userid
+	}).catch(function(err) {
+		res.send(err)
 	}).then(function(user) {
-		res.json({
+		res.send({
 			"message": {
 				"result": {
 					"user": user
