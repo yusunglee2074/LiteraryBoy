@@ -10,6 +10,7 @@ var http = require('http');
 // 모델폴더를 모듈로 가져온다.
 var models = require('../models');
 var appConfig = require('../config/app.json');
+var dbConfig = require("../config/db.json")[process.env.DB_ENV];
 
 
 /**
@@ -24,7 +25,12 @@ console.log("listening " + port + " ...");
  * Create HTTP server.
  */
 var server = http.createServer(app);
-models.sequelize.sync().then(function() {
+var initObject = {};
+if (dbConfig["re-init"]) {
+    initObject.force = true
+}
+
+models.sequelize.sync(initObject).then(function() {
   /** 
    * Listen on provided port, on all network interfaces.
    */  
