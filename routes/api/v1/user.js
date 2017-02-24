@@ -18,65 +18,62 @@ router.post('/', function(req, res) {
                     res.send("SUCCESS");
                 });
             } else {
+				res.status(500);
                 res.send("FAIL");
             }
 		}
 	});
 });
 
-router.get('/:userid', function(req, res) {
+router.get('/', function(req, res) {
 	Model.User.findOne({
 		"where": {
-			"userid": req.params['userid']
+			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
 		res.json({
 			"message": {
 				"result": {
-					"user": {
-						"user": user
-					}
+					"user": user 
 				}
 			}
 		});
 	});
 });
 
-router.delete('/:userid', function(req, res) {
+router.delete('/', function(req, res) {
 	Model.User.findOne({
 		"where": {
-			"userid": req.params['userid']
+			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
+		console.log(user);
 		user.destroy()
-		res.json({
+		res.send({
 			"message": "삭제 성공"
 		})
 	}).catch(function(err) {
 		res.status(err.status || 500);
-		res.json({
+		res.send({
 			"message": err
 		})
 	});
 });
 
-router.put('/:userid', function(req, res) {
+router.put('/', function(req, res) {
 	Model.User.findOne({
 		"where": {
-			"userid": req.params['userid']
+			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
 		user.update({
 			"nickname": req.body.nickname,
-			"profile_image_path": null,
-			"userid": req.body.userid
+			"profileimage": req.body.imageUrl
 	}).then(function(user) {
 		res.send({
 			"message": {
 				"result": {
-					"user": {
-						"user": user
-						}
+					"user": user
 					}
 				}
 			});

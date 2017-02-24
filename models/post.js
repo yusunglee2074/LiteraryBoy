@@ -20,6 +20,10 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             field: 'page',
         },
+        type: {
+            type: DataTypes.STRING,
+            field: 'type',
+        },
     },  {
         classMethods: {
             associate: function(models) {
@@ -36,7 +40,7 @@ module.exports = function(sequelize, DataTypes) {
 					values.lastcomment = Comment.findOne({"where": {'PostId': this.get('id')}}); 
 				}
 				else {
-					values.lastcomment = "코멘트가 없습니다."
+					values.lastcomment = {};
 				}
                 delete values.Readbook
 			}
