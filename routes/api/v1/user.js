@@ -6,7 +6,7 @@ var sequelize = require('sequelize')
 
 router.post('/', function(req, res) {
 	Model.User.create({
-		"token_type": req.body.token_type,
+		// "token_type": req.body.token_type,
 		"nickname": req.body.nickname,
 		// 프로필 파일 어디에 올리고 그 주소를 어떻게 가져올 것인가?
 		"profile_image_path": null,
@@ -15,9 +15,7 @@ router.post('/', function(req, res) {
 		res.json({
 			"message": {
 				"result": {
-					"user": {
-						"user": user
-					}
+					"user": user
 				}
 			}
 		});
@@ -67,7 +65,6 @@ router.put('/:userid', function(req, res) {
 		}
 	}).then(function(user) {
 		user.update({
-			"token_type": req.body.token_type,
 			"nickname": req.body.nickname,
 			"profile_image_path": null,
 			"userid": req.body.userid
