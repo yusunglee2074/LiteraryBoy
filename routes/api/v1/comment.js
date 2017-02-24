@@ -31,7 +31,7 @@ router.delete('/:postId/:commentId', function(req, res) {
 	Model.Comment.findOne({
 		"where": {
 			"id": req.params['commentId']
-		};
+		}
 	}).then(function(comment) {
 		// 오류처리 해야함
 		comment.destroy()
@@ -76,9 +76,10 @@ router.get('/my', function(req, res) {
 				"result": {
 					"comment": {
 						"comments": comment 
+						 }
 					 }
-				 }
-			}
+				}
+			});
 		});
 	});
 });
