@@ -5,6 +5,9 @@ var Model = require('../../../models');
 var sequelize = require('sequelize')
 
 router.post('/', function(req, res) {
+	console.log(req.body);
+	console.log(req.body.nickname);
+	console.log(req.body['nickname']);
 	Model.User.create({
 		"token_type": req.body.token_type,
 		"nickname": req.body.nickname,
@@ -12,6 +15,7 @@ router.post('/', function(req, res) {
 		"profile_image_path": null,
 		"token_value": req.body.token_value
 	}).then(function(user) {
+		console.log('유저 생성 완료');
 		res.json({
 			"message": {
 				"result": {
@@ -77,12 +81,12 @@ router.put('/:userId', function(req, res) {
 				"result": {
 					"user": {
 						"user": user
+						}
 					}
 				}
-			}
+			});
 		});
-	});
 	});
 });
 				
-
+module.exports = router;
