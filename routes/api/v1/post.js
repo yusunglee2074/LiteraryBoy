@@ -133,10 +133,9 @@ router.get('/:ISBN13/all', function(req, res) {
 				"result": {
 					"post": {
 						"posts": post 
-						 }
 					 }
-				}
-			});
+				 }
+			}
 		});
 	});
 });
