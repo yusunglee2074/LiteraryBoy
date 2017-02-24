@@ -4,22 +4,21 @@ var Model = require('../../../models');
 var sequelize = require('sequelize')
 
 router.post('/', function(req, res) {
-	Model.User.create({
-		// "token_type": req.body.token_type,
-		"nickname": req.body.nickname,
-		// 프로필 파일 어디에 올리고 그 주소를 어떻게 가져올 것인가?
-		"profile_image_path": req.body.imageUrl,
-		"userid": req.body.userid
-	}).catch(function(err) {
-		res.send(err)
-	}).then(function(user) {
-		res.send({
-			"message": {
-				"result": {
-					"user": user
-				}
-			}
-		});
+	Model.User.findOne({"where": {"nickname": req.body.nickname}}).then(function(user) {
+		if (user) {
+			// status set
+			res.send("해당 닉네임이 있습니다.")
+		} else {
+			Model.User.create({
+				"nickname": req.body.nickname,
+				"profile_image_path": req.body.imageUrl,
+				"userid": req.body.userid
+			}).catch(function(err) {
+				res.send(err)
+			}).then(function(user) {
+				res.send({ "message": { "result": { "user": user } } });
+			});
+		}
 	});
 });
 
