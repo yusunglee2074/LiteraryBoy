@@ -24,7 +24,6 @@ module.exports = function(sequelize, DataTypes) {
         classMethods: {
             associate: function(models) {
                 Post.belongsToMany(models.Hashtag, {through: 'post_hash'}),
-                Post.belongsTo(models.User),
 				Post.belongsTo(models.Readbook)
                 }
             },

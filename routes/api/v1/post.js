@@ -4,61 +4,24 @@ var router = express.Router();
 var Model = require('../../../models');
 var sequelize = require('sequelize')
 
-router.post('/:ISBN13/text', function(req, res) {
+router.post('/:ISBN13', function(req, res) {
     var hastag = [];
 	// 해쉬태그를 # 마다 쪼개서 딕셔너리로 만든다.
 	var hashdict = {};
 	Model.Readbook.findOne({
 		"where": {
 			"isbn13": req.params['ISBN13'],
-			"UserId": '1' 
+			"UserId": req.get('user_id')
 		}
 	}).then(function(book) {
-		console.log(book);
-		console.log("hello");
 		Model.Post.create({
 			"content": req.body.content,
-			"likecount": 0,
-			"imagepath": null,
+			"likecount": req.body,
+			"imagepath": req.body.imageUrl,
 			"theme": req.body.theme,
 			"page": req.body.page, 
 			// if 해쉬태그가 있다면...? 아직 해쉬태그 추가 구현 안함
 			// thorugh 테이블이 있다면 생성방법에 대해 검색해봐야함.
-			"UserId": book.get('UserId'),
-			"ReadbookId": book.get('id')
-		}).then(function(post) {
-			res.send({
-				"message": {
-					"result": {
-						"Post": post
-					 }
-				 }
-			});
-		});
-	});
-});
-
-router.post('/:ISBN13/image', function(req, res) {
-    var hastag = [];
-	// 해쉬태그를 # 마다 쪼개서 딕셔너리로 만든다.
-	var hashdict = {};
-	Model.Readbook.findOne({
-		"where": {
-			"isbn13": req.params['ISBN13'],
-			"UserId": '1' 
-		}
-	}).then(function(book) {
-		console.log(book);
-		console.log("hello");
-		Model.Post.create({
-			"content": req.body.content,
-			"likecount": 0,
-			"imagepath": null,
-			"theme": req.body.theme,
-			"page": req.body.page, 
-			// if 해쉬태그가 있다면...? 아직 해쉬태그 추가 구현 안함
-			// thorugh 테이블이 있다면 생성방법에 대해 검색해봐야함.
-			"UserId": book.get('UserId'),
 			"ReadbookId": book.get('id')
 		}).then(function(post) {
 			res.send({
