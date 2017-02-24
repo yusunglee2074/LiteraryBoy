@@ -72,30 +72,35 @@ router.post('/:ISBN13', function(req, res) {
             "isbn13": req.params['ISBN13']
         }
     }).then(function(book) {
+		// console.log(book);
+		// console.log('req header' + req.get('user_id'));
+		// console.log(req.headers);
         Model.User.findOne({
             "where": {
-                "userid": req.header.userid
+                "userid": req.get('user_id')
             }
-    }).then(function(user) {
-        Model.Readbook.create({
-            "readstartdate": sequelize.fn('now'),
-            "readenddate": null,
-            "reading_page": 0,
-            "isbn13": book.get('isbn13'),
-            "BookId": book.get('id'),
-            "UserId": user.get('id')
-        }).then(function(readbook) {
-            res.send({
-                "message": {
-                    "result": {
-                        "bookList": {
-                            "addbook": readbook 
-                             }
-                         }
-                     }
-                });
-            });
-        });
+		}).then(function(user) {
+			console.log("\t\t\t" +book.get("id"), book.get("isbn13"));
+			console.log(user.get('id'));
+			Model.Readbook.create({
+				"readstartdate": sequelize.fn('now'),
+				"readenddate": null,
+				"reading_page": 0,
+				"isbn13": book.get('isbn13'),
+				"BookId": book.get('id'),
+				"UserId": user.get('id')
+			}).then(function(readbook) {
+				res.send({
+					"message": {
+						"result": {
+							"bookList": {
+								"addbook": readbook 
+							 }
+						 }
+					 }
+				});
+			});
+		});
     });
 });
 
