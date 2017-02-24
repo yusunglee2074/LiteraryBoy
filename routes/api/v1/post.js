@@ -4,7 +4,7 @@ var router = express.Router();
 var Model = require('../../../models');
 var sequelize = require('sequelize')
 
-router.post('/:ISBN13/text/add', function(req, res) {
+router.post('/:ISBN13/text', function(req, res) {
     var hastag = [];
 	// 해쉬태그를 # 마다 쪼개서 딕셔너리로 만든다.
 	var hashdict = {};
@@ -38,7 +38,7 @@ router.post('/:ISBN13/text/add', function(req, res) {
 	});
 });
 
-router.post('/:ISBN13/image/add', function(req, res) {
+router.post('/:ISBN13/image', function(req, res) {
     var hastag = [];
 	// 해쉬태그를 # 마다 쪼개서 딕셔너리로 만든다.
 	var hashdict = {};
@@ -108,6 +108,25 @@ router.get('/:ISBN13/my', function(req, res) {
 				"model": Model.Readbook,
 				"where": { 'isbn13': req.params['ISBN13'] }
 			},
+	}).then(function(post) {
+		res.json({
+			"message": {
+				"result": {
+					"post": {
+						"posts": post 
+						 }
+					 }
+				}
+			});
+		});
+	});
+});
+
+router.get('/:ISBN13/all', function(req, res) {
+    Model.Post.findAll({
+			"where": {
+				"isbn13": req.params['ISBN13'] 
+			}
 	}).then(function(post) {
 		res.json({
 			"message": {
