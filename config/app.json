@@ -3,14 +3,17 @@
         "port" : 8001,
         "api": {
             "daum" : "877d563f1e5953dace1d88b6e675d78e"
-        }
+        },
+        "hostname": "jangdock.cafe24.com"
     },
     "devel": {
         "port" : 3011,
         "api": {
             "DAUM" : "846B27E534C10BCE39055515F75D57A7"
-        }
+        },
+        "hostname": "jangdock.cafe24.com"
     },
+
     "avoidAcl": {
         "GET": [
             "/"
