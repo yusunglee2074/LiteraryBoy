@@ -14,13 +14,10 @@ module.exports = function(sequelize, DataTypes) {
 		},
         // FIXME: 사용자가 어떤 토큰으로 인증했는지 정보가 있으면 api 응답할때 더 쉬울 듯 합니다.
 		// FIXED: 어떤 토큰으로 인증했는지 항목 추가하겠습니다.
-		tokentype: {
+		userid: {
 			type: DataTypes.STRING,
-			field: 'token_type'
-		},
-		tokenvalue: {
-			type: DataTypes.STRING,
-			field: 'token_value',
+			field: 'user_id',
+			unique: true
 		},
 		profileimage: {
 			type: DataTypes.STRING,

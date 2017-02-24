@@ -68,47 +68,39 @@ router.post('/:ISBN13', function(req, res) {
         // 추가 된 책이면 추가 됬다고 안내
     // 추가 된 책이 아닐시 유저 id와 책 ISBN을 받아서 Readbook 오브젝트를 만든다.
     Model.Book.findOne({
-        // 실제코드
-        /*
         "where": {
             "isbn13": req.params['ISBN13']
-        */
-        // 개발 임의 코드
-        "where": {
-            "id": "1"
         }
     }).then(function(book) {
+		// console.log(book);
+		// console.log('req header' + req.get('user_id'));
+		// console.log(req.headers);
         Model.User.findOne({
-            // 유저의 토큰으로 유저를 찾을 시에
             "where": {
-                "tokenvalue": req.header.user_token
+                "userid": req.get('user_id')
             }
-            // 개발 단계 임의 유저
-            /*
-            "where": {
-                "id": "1"
-            }
-            */
-    }).then(function(user) {
-        Model.Readbook.create({
-            "readstartdate": sequelize.fn('now'),
-            "readenddate": null,
-            "reading_page": 0,
-            "isbn13": book.get('isbn13'),
-            "BookId": book.get('id'),
-            "UserId": user.get('id')
-        }).then(function(readbook) {
-            res.send({
-                "message": {
-                    "result": {
-                        "bookList": {
-                            "addbook": readbook 
-                             }
-                         }
-                     }
-                });
-            });
-        });
+		}).then(function(user) {
+			console.log("\t\t\t" +book.get("id"), book.get("isbn13"));
+			console.log(user.get('id'));
+			Model.Readbook.create({
+				"readstartdate": sequelize.fn('now'),
+				"readenddate": null,
+				"reading_page": 0,
+				"isbn13": book.get('isbn13'),
+				"BookId": book.get('id'),
+				"UserId": user.get('id')
+			}).then(function(readbook) {
+				res.send({
+					"message": {
+						"result": {
+							"bookList": {
+								"addbook": readbook 
+							 }
+						 }
+					 }
+				});
+			});
+		});
     });
 });
 

@@ -31,7 +31,7 @@ router.delete('/:postId/:commentId', function(req, res) {
 	Model.Comment.findOne({
 		"where": {
 			"id": req.params['commentId']
-		};
+		}
 	}).then(function(comment) {
 		// 오류처리 해야함
 		comment.destroy()
@@ -42,7 +42,7 @@ router.delete('/:postId/:commentId', function(req, res) {
 	});
 });
 
-router.get('/:postId', function(req, res) {
+router.get('/:postId/list', function(req, res) {
 	Model.Comment.findOne({
 		"where": {
 			"PostId": req.params['postId']
@@ -56,6 +56,30 @@ router.get('/:postId', function(req, res) {
 					 }
 				 }
 			}
+		});
+	});
+});
+
+router.get('/my', function(req, res) {
+	Model.User.findOne({
+		"where": {
+			"tokenvalue": req.header.token_value
+		}
+	}).then(function(user) {
+		Model.Comment.findAll({
+			"where": {
+				"UserId": user.get('id')
+			}
+	}).then(function(comment) {
+		res.send({
+			"message": {
+				"result": {
+					"comment": {
+						"comments": comment 
+						 }
+					 }
+				}
+			});
 		});
 	});
 });
@@ -81,4 +105,5 @@ router.put('/:commentId', function(req, res) {
 		});
 	});
 });
-	
+
+module.exports = router;
