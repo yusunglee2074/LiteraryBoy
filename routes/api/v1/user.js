@@ -4,20 +4,23 @@ var Model = require('../../../models');
 var sequelize = require('sequelize')
 
 router.post('/', function(req, res) {
-	Model.User.findOne({"where": {"nickname": req.body.nickname}}).then(function(user) {
+	Model.User.findOne({"where": {"userid": req.body.userId}}).then(function(user) {
 		if (user) {
-			res.status(500);
-			res.send("해당 닉네임이 이미 존재합니다.")
+			// status set
+            res.send("SUCCESS");
 		} else {
-			Model.User.create({
-				"nickname": req.body.nickname,
-				"profileimage": req.body.imageUrl,
-				"userid": req.body.user_id
-			}).catch(function(err) {
-				res.send(err)
-			}).then(function(user) {
-				res.send("SUCCESS");
-			});
+            if (req.body.userId) {
+                Model.User.create({
+                    "nickname": req.body.nickname,
+                    "profile_image_path": req.body.imageUrl,
+                    "userid": req.body.userId
+                }).then(function(user) {
+                    res.send("SUCCESS");
+                });
+            } else {
+				res.status(500);
+                res.send("FAIL");
+            }
 		}
 	});
 });
