@@ -16,7 +16,7 @@ router.post('/:ISBN13', function(req, res) {
 	}).then(function(book) {
 		Model.Post.create({
 			"content": req.body.content,
-			"likecount": req.body,
+			"likecount": 0,
 			"imagepath": req.body.imageUrl,
 			"theme": req.body.theme,
 			"page": req.body.page, 
