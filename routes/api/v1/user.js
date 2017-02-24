@@ -12,11 +12,11 @@ router.post('/', function(req, res) {
 			Model.User.create({
 				"nickname": req.body.nickname,
 				"profile_image_path": req.body.imageUrl,
-				"userid": req.body.userid
+				"userid": req.body.userId
 			}).catch(function(err) {
 				res.send(err)
 			}).then(function(user) {
-				res.send({ "message": { "result": { "user": user } } });
+				res.send("SUCCESS");
 			});
 		}
 	});
