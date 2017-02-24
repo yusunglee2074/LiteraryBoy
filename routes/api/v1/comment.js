@@ -60,6 +60,29 @@ router.get('/:postId/list', function(req, res) {
 	});
 });
 
+router.get('/my', function(req, res) {
+	Model.User.findOne({
+		"where": {
+			"tokenvalue": req.header.token_value
+		}
+	}).then(function(user) {
+		Model.Comment.findAll({
+			"where": {
+				"UserId": user.get('id')
+			}
+	}).then(function(comment) {
+		res.send({
+			"message": {
+				"result": {
+					"comment": {
+						"comments": comment 
+					 }
+				 }
+			}
+		});
+	});
+});
+
 router.put('/:commentId', function(req, res) {
 	Model.Comment.findOne({
 		"where": {
@@ -81,4 +104,5 @@ router.put('/:commentId', function(req, res) {
 		});
 	});
 });
-	
+
+module.exports = router;
