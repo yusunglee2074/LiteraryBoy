@@ -98,11 +98,16 @@ router.post('/:ISBN13', function(req, res) {
 });
 
 router.delete('/:ISBN13', function(req, res) {
-    Model.Readbook.findOne({
-        "where": {
-            "UserId": req.get('user_id'),
-            "isbn13": req.params['ISBN13']
-        }
+	Model.User.findOne({
+		"where": {
+			"userid": req.get('user_id')
+		}
+	}).then(function(user) {
+		Model.Readbook.findOne({
+			"where": {
+				"UserId": user.id,
+				"isbn13": req.params['ISBN13']
+			}
     }).then(function(readbook) {
         readbook.destroy()
         res.send({
@@ -114,15 +119,21 @@ router.delete('/:ISBN13', function(req, res) {
         res.send({
             "message":  "삭제실패.",
             "err": "해당 값의 책이 없습니다." 
+			});
         });
     });
 });
 
 router.get('/all', function(req, res) {
-    Model.Readbook.findAll({
-        "where": {
-            "UserId": req.get('user_id')
-        }
+	Model.User.findOne({
+		"where": {
+			"userid": req.get('user_id')
+		}
+	}).then(function(user) {
+		Model.Readbook.findAll({
+			"where": {
+				"UserId": user.id
+			}
     }).then(function(allbook) {
         res.send({
             "message": {
@@ -132,23 +143,30 @@ router.get('/all', function(req, res) {
                          }
                      }
                 }
+			});
         });
     })
 });
 
 router.get('/:ISBN13', function(req, res) {
-    Model.Readbook.findOne({
-        "where": {
-            "UserId": req.get('user_id'),
-            "isbn13": req.params['ISBN13']
-        }
+	Model.User.findOne({
+		"where": {
+			"userid": req.get('user_id')
+		}
+	}).then(function(user) {
+		Model.Readbook.findOne({
+			"where": {
+				"UserId": user.id,
+				"isbn13": req.params['ISBN13']
+			}
     }).then(function(book) {
         res.send({
             "message": {
                 "result": {
                     "book": book,
-                 }
-             }
+					 }
+				 }
+			});
         })
     });
 });
