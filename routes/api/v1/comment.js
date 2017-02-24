@@ -42,7 +42,7 @@ router.delete('/:postId/:commentId', function(req, res) {
 	});
 });
 
-router.get('/:postId', function(req, res) {
+router.get('/:postId/list', function(req, res) {
 	Model.Comment.findOne({
 		"where": {
 			"PostId": req.params['postId']
