@@ -9,7 +9,7 @@ router.post('/', function(req, res) {
 			// status set
             res.send("SUCCESS");
 		} else {
-            if (userId) {
+            if (req.body.userId) {
                 Model.User.create({
                     "nickname": req.body.nickname,
                     "profile_image_path": req.body.imageUrl,
