@@ -72,16 +72,11 @@ router.post('/:ISBN13', function(req, res) {
             "isbn13": req.params['ISBN13']
         }
     }).then(function(book) {
-		// console.log(book);
-		// console.log('req header' + req.get('user_id'));
-		// console.log(req.headers);
         Model.User.findOne({
             "where": {
                 "userid": req.get('user_id')
             }
 		}).then(function(user) {
-			console.log("\t\t\t" +book.get("id"), book.get("isbn13"));
-			console.log(user.get('id'));
 			Model.Readbook.create({
 				"readstartdate": sequelize.fn('now'),
 				"readenddate": null,
@@ -93,9 +88,7 @@ router.post('/:ISBN13', function(req, res) {
 				res.send({
 					"message": {
 						"result": {
-							"bookList": {
-								"addbook": readbook 
-							 }
+							"book": readbook 
 						 }
 					 }
 				});
@@ -106,17 +99,9 @@ router.post('/:ISBN13', function(req, res) {
 
 router.delete('/:ISBN13', function(req, res) {
     Model.Readbook.findOne({
-        // 실제 코드
-        /*
         "where": {
-            "UserId": req.header.user_token,
+            "UserId": req.get('user_id'),
             "isbn13": req.params['ISBN13']
-        }
-        */
-        // 테스트용 임의 값
-        "where": {
-            "UserId": 1,
-            "isbn13": "9791133426898"
         }
     }).then(function(readbook) {
         readbook.destroy()
@@ -125,7 +110,6 @@ router.delete('/:ISBN13', function(req, res) {
         })
     }).catch(function(err) {
         // 오류 처리를 하는법 공부해서 리팩토링해야된다.
-
         // TODO: status code 500 으로 반환해주세요
         res.send({
             "message":  "삭제실패.",
@@ -136,16 +120,9 @@ router.delete('/:ISBN13', function(req, res) {
 
 router.get('/all', function(req, res) {
     Model.Readbook.findAll({
-        // 실제 코드
         "where": {
-            "UserId": req.header.user_token
+            "UserId": req.get('user_id')
         }
-        // 테스트용 임의 코드
-        /*
-        "where": {
-            "UserId": 1
-        }
-        */
     }).then(function(allbook) {
         res.send({
             "message": {
@@ -161,25 +138,15 @@ router.get('/all', function(req, res) {
 
 router.get('/:ISBN13', function(req, res) {
     Model.Readbook.findOne({
-        // 실제 코드
         "where": {
-            "UserId": req.header.user_token,
+            "UserId": req.get('user_id'),
             "isbn13": req.params['ISBN13']
         }
-        // 테스트용 임의 코드
-        /*
-        "where": {
-            "UserId": 1,
-            "isbn13": "9788968480652"
-        }
-        */
     }).then(function(book) {
         res.send({
             "message": {
                 "result": {
-                    "bookList": {
-                        "books": book 
-                     }
+                    "book": book,
                  }
              }
         })
