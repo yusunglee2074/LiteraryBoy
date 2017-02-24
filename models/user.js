@@ -18,9 +18,9 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			field: 'token_type'
 		},
-		tokenvalue: {
+		userid: {
 			type: DataTypes.STRING,
-			field: 'token_value',
+			field: 'user_id',
 		},
 		profileimage: {
 			type: DataTypes.STRING,
