@@ -21,7 +21,7 @@
 		"db" : "yusung1",
 		"user" : "postgres",
 		"password" : "3030",
-		"re-init" : false
+		"re-init" : false 
 	},
 	"devel_remote": {
 		"host" : "jangdock.cafe24.com",
