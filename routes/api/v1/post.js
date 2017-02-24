@@ -5,9 +5,6 @@ var Model = require('../../../models');
 var sequelize = require('sequelize')
 
 router.post('/:ISBN13', function(req, res) {
-    var hastag = [];
-	// 해쉬태그를 # 마다 쪼개서 딕셔너리로 만든다.
-	var hashdict = {};
 	Model.Readbook.findOne({
 		"where": {
 			"isbn13": req.params['ISBN13'],
@@ -42,7 +39,6 @@ router.delete('/:postId/remove', function(req, res) {
 		}
 	}).then(function(post) {
 		// if post가 null이면  삭제 실패
-		console.log("@@@@@@@@@@@@" + post);
 		post.destroy()
 		res.send({
 			"message": "삭제 성공."
@@ -58,8 +54,7 @@ router.delete('/:postId/remove', function(req, res) {
 router.get('/:ISBN13/my', function(req, res) {
 	Model.User.findOne({
 		"where": {
-			//"tokenvalue": req.header.token_value
-			"id": "1"
+			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
 		Model.Post.findAll({
@@ -87,9 +82,9 @@ router.get('/:ISBN13/my', function(req, res) {
 
 router.get('/:ISBN13/all', function(req, res) {
     Model.Post.findAll({
-			"where": {
-				"isbn13": req.params['ISBN13'] 
-			}
+		"where": {
+			"isbn13": req.params['ISBN13'] 
+		}
 	}).then(function(post) {
 		res.json({
 			"message": {
@@ -106,23 +101,20 @@ router.get('/:ISBN13/all', function(req, res) {
 router.put('/:postid', function(req, res) {
 	Model.Post.findOne({
 		"where": {
-			"UserId": req.head.token_value,
+			"UserId": req.get('user_id'),
 			"id": req.params["postid"]
 		}
 	}).then(function(post) {
 		post.update({
 			content: req.body.content,
 			page: req.body.page,
-			// 이미지 처리 방법을 아직 모른다.
-			imagepath: req.body.image,
+			imagepath: req.body.imageUrl,
 			theme: req.body.theme
 	}).then(function(post) {
 		res.send({
 			"message": {
 				"result": {
-					"post": {
-						"posts": post 
-						 }
+					"post": post 
 					}
 				}
 			});
