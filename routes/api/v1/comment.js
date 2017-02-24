@@ -12,7 +12,7 @@ router.post('/:postId', function(req, res) {
 	}).then(function(post) {
 		Model.Comment.create({
 			"content": req.body.content,
-			"UserId": req.head.token_value,
+			"UserId": req.get('user_id'),
 			"PostId": post.id
 			});
 	}).then(function(comment) {
@@ -34,6 +34,7 @@ router.delete('/:postId/:commentId', function(req, res) {
 		}
 	}).then(function(comment) {
 		// 오류처리 해야함
+		// 자신의 것이 아닌 코멘트는 삭제 안되게 해야함
 		comment.destroy()
 	}).then(function() {
 		res.send({
@@ -43,7 +44,7 @@ router.delete('/:postId/:commentId', function(req, res) {
 });
 
 router.get('/:postId/list', function(req, res) {
-	Model.Comment.findOne({
+	Model.Comment.findAll({
 		"where": {
 			"PostId": req.params['postId']
 		}
@@ -52,8 +53,8 @@ router.get('/:postId/list', function(req, res) {
 			"message": {
 				"result": {
 					"comment": {
-						"comments": comment 
-					 }
+						"comments": comment
+					}
 				 }
 			}
 		});
@@ -63,7 +64,7 @@ router.get('/:postId/list', function(req, res) {
 router.get('/my', function(req, res) {
 	Model.User.findOne({
 		"where": {
-			"tokenvalue": req.header.token_value
+			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
 		Model.Comment.findAll({
@@ -97,9 +98,7 @@ router.put('/:commentId', function(req, res) {
 		res.send({
 			"message": {
 				"result": {
-					"comment": {
-						"comments": comment 
-					 }
+					"comment": comment
 				}
 			}
 		});
