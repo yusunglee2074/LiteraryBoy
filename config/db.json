@@ -45,6 +45,6 @@
 		"db" : "lp_dev_jihoon",
 		"user" : "jihoon",
 		"password" : "sicamp36",
-		"re-init" : true
+		"re-init" : false
 	}
 }

@@ -17,6 +17,8 @@ var apiV1Comment = require('./routes/api/v1/comment');
 var apiV1User = require('./routes/api/v1/user');
 var apiV1Image = require('./routes/image');
 
+var Model = require('./models');
+
 var app = express();
 
 app.set('views', path.join(__dirname, 'views'));
@@ -29,14 +31,27 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next) {
-    if (appConfig.avoidAcl[req.method] && appConfig.avoidAcl[req.method].indexOf(req.path) > -1) {
-        // require user token
-        console.log('require user token');
-    } else {
+    if ( (appConfig.avoidAcl[req.method] && appConfig.avoidAcl[req.method].indexOf(req.path) > -1) || (req.path == "/api/v1/test") ) {
         // not necessary user token
         console.log('not rq user token');
+        next();
+    } else {
+        Model.User.findOne({
+            "where": {
+                "userid": req.get("user_id")
+            }
+        }).then(function(user) {
+            // console.log("-------", user);
+            if (user) {
+                next();
+            } else {
+                var err = new Error('Header : "user_id" is require.');
+                err.status = 414;
+                next(err);
+            }
+        });
+        // require user token
     }
-    next();
 });
 
 app.use('/', index);
@@ -63,7 +78,7 @@ app.use(function(err, req, res, next) {
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
+    res.send(err);
 });
 
 
