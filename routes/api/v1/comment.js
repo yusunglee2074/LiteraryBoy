@@ -4,30 +4,37 @@ var Model = require('../../../models');
 var sequelize = require('sequelize')
 
 
-router.post('/:postId', function(req, res) {
+router.post('/:POSTID', function(req, res) {
 	Model.Post.findOne({
 		"where": {
 			"id": req.params['POSTID']
 		}
 	}).then(function(post) {
-		Model.Comment.create({
-			"content": req.body.content,
-			"UserId": req.get('user_id'),
-			"PostId": post.id
-			});
-	}).then(function(comment) {
-		res.send({
-			"message": {
-				"result": {
-					"comment": comment 
-				 }
+		Model.User.findOne({
+			"where": {
+				"userid": req.get('user_id')
 			}
+		}).then(function(user) {
+			Model.Comment.create({
+				"content": req.body.content,
+				"UserId": user.id,
+				"PostId": post.id
+				}).then(function(comment) {
+					res.send({
+						"message": {
+							"result": {
+								"comment": comment 
+							 }
+						}
+					});
+				});
 		});
 	});
 });
 
 
-router.delete('/:postId/:commentId', function(req, res) {
+
+router.delete('/:commentId', function(req, res) {
 	Model.Comment.findOne({
 		"where": {
 			"id": req.params['commentId']
@@ -69,7 +76,7 @@ router.get('/my', function(req, res) {
 	}).then(function(user) {
 		Model.Comment.findAll({
 			"where": {
-				"UserId": user.get('id')
+				"UserId": user.id
 			}
 	}).then(function(comment) {
 		res.send({
@@ -93,14 +100,14 @@ router.put('/:commentId', function(req, res) {
 	}).then(function(comment) {
 		comment.update({
 			content: req.body.content
-			});
 	}).then(function(comment) {
 		res.send({
 			"message": {
 				"result": {
 					"comment": comment
+					}
 				}
-			}
+			});
 		});
 	});
 });
