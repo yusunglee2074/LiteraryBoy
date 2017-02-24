@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: false,
 			field: 'nickname',
-			unique: true,
+			unique: false,
 			validate: {
 				len: [1,20],
 				// 특수문자 허용안되게 기능추가해야함 
