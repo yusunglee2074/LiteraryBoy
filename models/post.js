@@ -19,11 +19,7 @@ module.exports = function(sequelize, DataTypes) {
         page: {
             type: DataTypes.INTEGER,
             field: 'page',
-        },
-        type: {
-            type: DataTypes.STRING,
-            field: 'type',
-        },
+        }
     },  {
         classMethods: {
             associate: function(models) {
