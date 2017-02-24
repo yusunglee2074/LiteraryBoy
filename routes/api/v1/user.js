@@ -5,17 +5,13 @@ var Model = require('../../../models');
 var sequelize = require('sequelize')
 
 router.post('/', function(req, res) {
-	console.log(req.body);
-	console.log(req.body.nickname);
-	console.log(req.body['nickname']);
 	Model.User.create({
 		"token_type": req.body.token_type,
 		"nickname": req.body.nickname,
 		// 프로필 파일 어디에 올리고 그 주소를 어떻게 가져올 것인가?
 		"profile_image_path": null,
-		"token_value": req.body.token_value
+		"userid": req.body.userid
 	}).then(function(user) {
-		console.log('유저 생성 완료');
 		res.json({
 			"message": {
 				"result": {
@@ -28,10 +24,10 @@ router.post('/', function(req, res) {
 	});
 });
 
-router.get('/:userId', function(req, res) {
+router.get('/:userid', function(req, res) {
 	Model.User.findOne({
 		"where": {
-			"id": req.params['userId']
+			"userid": req.params['userid']
 		}
 	}).then(function(user) {
 		res.json({
@@ -46,10 +42,10 @@ router.get('/:userId', function(req, res) {
 	});
 });
 
-router.delete('/:userId', function(req, res) {
+router.delete('/:userid', function(req, res) {
 	Model.User.findOne({
 		"where": {
-			"id": req.params['id']
+			"userid": req.params['userid']
 		}
 	}).then(function(user) {
 		user.destroy()
@@ -64,17 +60,17 @@ router.delete('/:userId', function(req, res) {
 	});
 });
 
-router.put('/:userId', function(req, res) {
+router.put('/:userid', function(req, res) {
 	Model.User.findOne({
 		"where": {
-			"id": req.params['userId']
+			"userid": req.params['userid']
 		}
 	}).then(function(user) {
 		user.update({
 			"token_type": req.body.token_type,
 			"nickname": req.body.nickname,
 			"profile_image_path": null,
-			"token_value": req.body.token_value
+			"userid": req.body.userid
 	}).then(function(user) {
 		res.send({
 			"message": {
