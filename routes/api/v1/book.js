@@ -68,27 +68,14 @@ router.post('/:ISBN13', function(req, res) {
         // 추가 된 책이면 추가 됬다고 안내
     // 추가 된 책이 아닐시 유저 id와 책 ISBN을 받아서 Readbook 오브젝트를 만든다.
     Model.Book.findOne({
-        // 실제코드
-        /*
         "where": {
             "isbn13": req.params['ISBN13']
-        */
-        // 개발 임의 코드
-        "where": {
-            "id": "1"
         }
     }).then(function(book) {
         Model.User.findOne({
-            // 유저의 토큰으로 유저를 찾을 시에
             "where": {
-                "tokenvalue": req.header.user_token
+                "userid": req.header.userid
             }
-            // 개발 단계 임의 유저
-            /*
-            "where": {
-                "id": "1"
-            }
-            */
     }).then(function(user) {
         Model.Readbook.create({
             "readstartdate": sequelize.fn('now'),
