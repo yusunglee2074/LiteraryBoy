@@ -5,18 +5,20 @@ var Model = require('../../../models');
 var sequelize = require('sequelize')
 
 router.post('/:ISBN13', function(req, res) {
-    var hastag = [];
-	// 해쉬태그를 # 마다 쪼개서 딕셔너리로 만든다.
-	var hashdict = {};
-	Model.Readbook.findOne({
+	Model.User.findOne({
 		"where": {
-			"isbn13": req.params['ISBN13'],
-			"UserId": req.get('user_id')
+			"userid": req.get('user_id')
 		}
+	}).then(function(user) {
+		Model.Readbook.findOne({
+			"where": {
+				"isbn13": req.params['ISBN13'],
+				"UserId": user.id
+			}
 	}).then(function(book) {
 		Model.Post.create({
 			"content": req.body.content,
-			"likecount": 0,
+			"likecount": Math.floor(Math.random() * 10),
 			"imagepath": req.body.imageUrl,
 			"theme": req.body.theme,
 			"page": req.body.page, 
@@ -28,21 +30,21 @@ router.post('/:ISBN13', function(req, res) {
 				"message": {
 					"result": {
 						"Post": post
+						 }
 					 }
-				 }
+				});
 			});
 		});
 	});
 });
 
-router.delete('/:postId/remove', function(req, res) {
+router.delete('/:postId', function(req, res) {
 	Model.Post.findOne({
 		"where": {
 			"id": req.params['postId']
 		}
 	}).then(function(post) {
 		// if post가 null이면  삭제 실패
-		console.log("@@@@@@@@@@@@" + post);
 		post.destroy()
 		res.send({
 			"message": "삭제 성공."
@@ -58,21 +60,53 @@ router.delete('/:postId/remove', function(req, res) {
 router.get('/:ISBN13/my', function(req, res) {
 	Model.User.findOne({
 		"where": {
-			//"tokenvalue": req.header.token_value
-			"id": "1"
+			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		Model.Post.findAll({
+		Model.Readbook.findOne({
 			"where": {
-				"UserId": user.get('id') 
-			},
-			"include": 
-			{
-				"model": Model.Readbook,
-				"where": { 'isbn13': req.params['ISBN13'] }
-			},
+				"UserId": user.id,
+				"isbn13": req.params['ISBN13']
+			}
+		}).then(function(readbook) {
+			Model.Post.findAll({
+				"where": {
+					"ReadbookId": readbook.id
+				},
+				/*
+				"include": 
+				{
+					"model": Model.Readbook,
+					"where": { 'isbn13': req.params['ISBN13'] }
+				},
+				*/
 	}).then(function(post) {
 		res.json({
+			"message": {
+				"result": {
+					"post": {
+						"posts": post 
+							 }
+						 }
+					}
+				});
+			});
+		});
+	});
+});
+
+router.get('/:ISBN13/all', function(req, res) {
+	Model.Readbook.findOne({
+		"where": {
+			"isbn13": req.params['ISBN13']
+		}
+	}).then(function(readbook) {
+		Model.Post.findAll({
+			"where": {
+				"ReadbookId": readbook.id
+			}
+	}).then(function(post) {
+		res.send({
 			"message": {
 				"result": {
 					"post": {
@@ -85,44 +119,24 @@ router.get('/:ISBN13/my', function(req, res) {
 	});
 });
 
-router.get('/:ISBN13/all', function(req, res) {
-    Model.Post.findAll({
-			"where": {
-				"isbn13": req.params['ISBN13'] 
-			}
-	}).then(function(post) {
-		res.json({
-			"message": {
-				"result": {
-					"post": {
-						"posts": post 
-					 }
-				 }
-			}
-		});
-	});
-});
-
 router.put('/:postid', function(req, res) {
 	Model.Post.findOne({
 		"where": {
-			"UserId": req.head.token_value,
 			"id": req.params["postid"]
 		}
 	}).then(function(post) {
+		// 해당아이디의 포스트가 없을 경우 에러 처리
 		post.update({
 			content: req.body.content,
 			page: req.body.page,
-			// 이미지 처리 방법을 아직 모른다.
-			imagepath: req.body.image,
-			theme: req.body.theme
+			imagepath: req.body.imageUrl,
+			theme: req.body.theme,
+			type: req.body.type
 	}).then(function(post) {
 		res.send({
 			"message": {
 				"result": {
-					"post": {
-						"posts": post 
-						 }
+					"post": post 
 					}
 				}
 			});
