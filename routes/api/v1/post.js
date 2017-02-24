@@ -154,8 +154,7 @@ router.put('/:postid', function(req, res) {
 			// 이미지 처리 방법을 아직 모른다.
 			imagepath: req.body.image,
 			theme: req.body.theme
-		});
-	}).then(function() {
+	}).then(function(post) {
 		res.send({
 			"message": {
 				"result": {
@@ -164,6 +163,7 @@ router.put('/:postid', function(req, res) {
 						 }
 					}
 				}
+			});
 		});
 	});
 });
