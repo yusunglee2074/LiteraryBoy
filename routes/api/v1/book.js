@@ -40,6 +40,8 @@ router.get('/search', function(req, res) {
                         } else {
                             callback(null);
                         }
+                    }).catch(function (book) {
+                        callback(null);
                     });
                 }, function() {
                     res.send({
@@ -93,7 +95,23 @@ router.post('/:ISBN13', function(req, res) {
 					 }
 				});
 			});
+		}).catch(function(err) {
+            res.status(500).send({
+                "message": {
+                    "result": {
+                        "error": err
+                     }
+                 }
+            });
 		});
+    }).then(function(err) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": err
+                 }
+             }
+        });
     });
 });
 
@@ -115,8 +133,7 @@ router.delete('/:ISBN13', function(req, res) {
         })
     }).catch(function(err) {
         // 오류 처리를 하는법 공부해서 리팩토링해야된다.
-        // TODO: status code 500 으로 반환해주세요
-        res.send({
+        res.status(500).send({
             "message":  "삭제실패.",
             "err": "해당 값의 책이 없습니다." 
 			});

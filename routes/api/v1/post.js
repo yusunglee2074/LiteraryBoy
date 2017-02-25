@@ -33,7 +33,31 @@ router.post('/:ISBN13', function(req, res) {
                          }
                      }
                 });
+            }).catch(function(error) {
+                res.send({
+                    "message": {
+                        "result": {
+                            "error": error
+                         }
+                     }
+                });
             });
+        }).catch(function(error) {
+            res.send({
+                "message": {
+                    "result": {
+                        "error": error
+                     }
+                 }
+            });
+        });
+    }).catch(function(error) {
+        res.send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+             }
         });
     });
 });

@@ -4,22 +4,25 @@ var Model = require('../../../models');
 var sequelize = require('sequelize')
 
 router.post('/', function(req, res) {
-	Model.User.findOne({"where": {"userid": req.body.userId}}).then(function(user) {
+	Model.User.findOne({"where": {"userid": req.body.user_id}}).then(function(user) {
 		if (user) {
 			// status set
             res.send("SUCCESS");
 		} else {
-            if (req.body.userId) {
+            if (req.body.user_id) {
                 Model.User.create({
                     "nickname": req.body.nickname,
                     "profile_image_path": req.body.imageUrl,
-                    "userid": req.body.userId
+                    "userid": req.body.user_id
                 }).then(function(user) {
                     res.send("SUCCESS");
+                }).catch(function(err) {
+                    res.send("FAIL\t" + err);
+                    console.log(err);
                 });
             } else {
-				res.status(500);
-                res.send("FAIL");
+                res.status(500).send("FAIL");
+                console.log("req.bodyuser_id is null");
             }
 		}
 	});
