@@ -21,6 +21,7 @@ router.get('/search', function(req, res) {
                         "bookId"       : item.isbn13,
                         "name"         : item.title,
                         "author"       : item.author,
+                        "page"         : Math.round(Math.random()*100 + Math.random()*300),
                         "pub_nm"       : item.pub_nm,
                         "pub_date"     : Math.round(new Date(item.pub_date.substr(0,4), item.pub_date.substr(4,2) - 1, item.pub_date.substr(6,2)).getTime()/1000),
                         "thumbnailUrl" : item.cover_l_url
@@ -68,95 +69,115 @@ router.get('/search', function(req, res) {
 });
 
 router.post('/:ISBN13', function(req, res) {
-    // if 이미 추가된 책인가? (유저 id와 isbn13의 값으로 검증)
-        // 추가 된 책이면 추가 됬다고 안내
-    // 추가 된 책이 아닐시 유저 id와 책 ISBN을 받아서 Readbook 오브젝트를 만든다.
     Model.Book.findOne({
         "where": {
             "isbn13": req.params['ISBN13']
         }
     }).then(function(book) {
-        if (book) {
-            aladin.page_search(req.params['ISBN13'], function(error, response, body) {
-                var jbody = JSON.parse(body.replace(/;$/,''));
-                var page = jbody.item[0].bookinfo.itemPage;
+        Model.User.findOne({
+            "where": {
+                "userid": req.get('user_id')
+            }
+        }).then(function(user) {
+            Model.Readbook.findOne({
+                "where": {
+                    "UserId": user.id,
+                    "BookId": book.id
+				},
+                "include": [Model.User]
                 
-                Model.User.findOne({
-                    "where": {
-                        "userid": req.get('user_id')
-                    }
-                }).then(function(user) {
-                    if (!user) {
-                        res.send({
-                            "message": {
-                                "result": {
-                                    "user": {}
-                                 }
-                             }
-                        });
-                    } else {
-                        Model.Readbook.create({
-                            "readstartdate": sequelize.fn('now'),
-                            "readenddate": null,
-                            "reading_page": 0,
-                            "isbn13": book.get('isbn13'),
-                            "BookId": book.get('id'),
-                            "UserId": user.get('id'),
-                            "totalpage": page
-                            }).then(function(readbook) {
-                                Model.Readbook.findOne({
-                                    "where": {
-                                        "id": readbook.id
-                                    },
-                                    "include": [Model.User]
-                                }).then(function(readbook) {
-                                    res.send({
-                                    "message": {
-                                        "result": {
-                                            "book": ormUtil.combineUser(ormUtil.dateToTimestamp(readbook))
-                                         }
-                                     }
-                                    });
-                                }).catch(function(error) {
-                                    res.status(500).send({
-                                        "message": {
-                                            "result": {
-                                                "error": error
-                                             }
-                                         }
-                                    });
-                                });
-                            });
-                    }
-                }).catch(function(err) {
-                    res.status(500).send({
+			}).then(function(readbook) {
+                if (readbook) {
+                    res.send({
                         "message": {
                             "result": {
-                                "error": err
+                                "book": ormUtil.combineUser(ormUtil.dateToTimestamp(readbook))
                              }
                          }
                     });
-                });
-            });
-        } else {
-            res.send({
-                "message": {
-                    "result": {
-                        "book": {}
-                     }
-                 }
-            }).catch(function(err) {
-                res.status(500).send({
+                } else {
+                    aladin.page_search(req.params['ISBN13'], function(error, response, body) {
+                        var jbody = JSON.parse(body.replace(/;$/,''));
+                        var page = jbody.item[0].bookinfo.itemPage;
+                        
+                        Model.User.findOne({
+                            "where": {
+                                "userid": req.get('user_id')
+                            }
+                        }).then(function(user) {
+                            if (!user) {
+                                res.send({
+                                    "message": {
+                                        "result": {
+                                            "user": {}
+                                         }
+                                     }
+                                });
+                            } else {
+                                Model.Readbook.create({
+                                    "readstartdate": sequelize.fn('now'),
+                                    "readenddate": null,
+                                    "reading_page": 0,
+                                    "isbn13": book.get('isbn13'),
+                                    "BookId": book.get('id'),
+                                    "UserId": user.get('id'),
+                                    "totalpage": page
+                                    }).then(function(readbook) {
+                                        Model.Readbook.findOne({
+                                            "where": {
+                                                "id": readbook.id
+                                            },
+                                            "include": [Model.User]
+                                        }).then(function(readbook) {
+                                            res.send({
+                                            "message": {
+                                                "result": {
+                                                    "book": ormUtil.combineUser(ormUtil.dateToTimestamp(readbook))
+                                                 }
+                                             }
+                                            });
+                                        }).catch(function(error) {
+                                            res.status(501).send({
+                                                "message": {
+                                                    "result": {
+                                                        "error": error
+                                                     }
+                                                 }
+                                            });
+                                        });
+                                    });
+                            }
+                        }).catch(function(err) {
+                            res.status(502).send({
+                                "message": {
+                                    "result": {
+                                        "error": err
+                                     }
+                                 }
+                            });
+                        });
+                    });
+                }
+			}).catch(function(err) {
+                res.status(503).send({
                     "message": {
                         "result": {
                             "error": err
                          }
                      }
-                    });
                 });
-        }
-    }).catch(function(error) {
-        res.status(500).send({
+			});
+        }).catch(function(err) {
+            res.status(504).send({
+                "message": {
+                    "result": {
+                        "error": err
+                     }
+                 }
+            });
+		});
+    }).catch(function(err) {
+        res.status(505).send({
             "message": {
                 "result": {
                     "error": err
