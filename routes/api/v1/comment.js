@@ -27,7 +27,31 @@ router.post('/:POSTID', function(req, res) {
 							 }
 						}
 					});
-				});
+				}).catch(function(error) {
+                    res.status(500).send({
+                        "message": {
+                            "result": {
+                                "error": error
+                             }
+                         }
+                    });
+                });
+        }).catch(function(error) {
+            res.status(500).send({
+                "message": {
+                    "result": {
+                        "error": error
+                     }
+                 }
+            });
+        });
+    }).catch(function(error) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+             }
 		});
 	});
 });
@@ -40,14 +64,21 @@ router.delete('/:commentId', function(req, res) {
 			"id": req.params['commentId']
 		}
 	}).then(function(comment) {
-		// 오류처리 해야함
 		// 자신의 것이 아닌 코멘트는 삭제 안되게 해야함
 		comment.destroy()
 	}).then(function() {
 		res.send({
 			"message": "삭제성공했습니다."
 		});
-	});
+	}).catch(function(error) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+             }
+        });
+    });
 });
 
 router.get('/:postId/list', function(req, res) {
@@ -65,7 +96,15 @@ router.get('/:postId/list', function(req, res) {
 				 }
 			}
 		});
-	});
+	}).catch(function(error) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+             }
+        });
+    });
 });
 
 router.get('/my', function(req, res) {
@@ -89,7 +128,15 @@ router.get('/my', function(req, res) {
 				}
 			});
 		});
-	});
+	}).catch(function(error) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+             }
+        });
+    });
 });
 
 router.put('/:commentId', function(req, res) {
@@ -100,16 +147,32 @@ router.put('/:commentId', function(req, res) {
 	}).then(function(comment) {
 		comment.update({
 			content: req.body.content
-	}).then(function(comment) {
-		res.send({
-			"message": {
-				"result": {
-					"comment": comment
-					}
-				}
-			});
-		});
-	});
+        }).then(function(comment) {
+            res.send({
+                "message": {
+                    "result": {
+                        "comment": comment
+                    }
+                }
+            });
+        }).catch(function(error) {
+            res.status(500).send({
+                "message": {
+                    "result": {
+                        "error": error
+                     }
+                 }
+            });
+        });
+	}).catch(function(error) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+             }
+        });
+    });
 });
 
 module.exports = router;
