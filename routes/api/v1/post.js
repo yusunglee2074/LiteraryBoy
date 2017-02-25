@@ -3,6 +3,7 @@ var async = require('async');
 var router = express.Router();
 var Model = require('../../../models');
 var sequelize = require('sequelize')
+var ormUtil = require('../../../util/ormUtil');
 
 router.post('/:ISBN13', function(req, res) {
     Model.User.findOne({
@@ -44,12 +45,34 @@ router.post('/:ISBN13', function(req, res) {
                         // thorugh 테이블이 있다면 생성방법에 대해 검색해봐야함.
                         "ReadbookId": book.get('id')
                     }).then(function(post) {
-                        res.send({
-                            "message": {
-                                "result": {
-                                    "Post": post
+                        Model.Post.findOne({
+                            "where": {
+                                "id": post.get('id')
+                            },
+                            "include": [
+                                {
+                                    "model": Model.Readbook,
+                                    "include": [Model.User]
+                                }
+                            ]
+                        }).then(function(post) {
+                            // console.log(post);
+                            res.send({
+                                "message": {
+                                    "result": {
+                                        // "post": ormUtil.combineUser(post)
+                                        "post": post
+                                     }
                                  }
-                             }
+                            });
+                        }).catch(function(error) {
+                            res.status(500).send({
+                                "message": {
+                                    "result": {
+                                        "error": error
+                                     }
+                                 }
+                            });
                         });
                     }).catch(function(error) {
                         res.status(500).send({
@@ -171,7 +194,7 @@ router.get('/:ISBN13/my', function(req, res) {
                                 "message": {
                                     "result": {
                                         "post": {
-                                            "posts": post 
+                                            "posts": ormUtil.combineUser(post)
                                          }
                                      }
                                 }
@@ -243,7 +266,7 @@ router.get('/:ISBN13/all', function(req, res) {
                         "message": {
                             "result": {
                                 "post": {
-                                    "posts": post 
+                                    "posts": ormUtil.combineUser(post)
                                  }
                              }
                         }
@@ -293,12 +316,27 @@ router.put('/:postid', function(req, res) {
                 theme: req.body.theme,
                 type: req.body.type
             }).then(function(post) {
-                res.send({
-                    "message": {
-                        "result": {
-                            "post": post 
-                        }
-                    }
+                Model.Post.findOne({
+                    "where": {
+                        "id": post.get('id')
+                    },
+                    "include": [Model.User]
+                }).then(function(post) {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "post": ormUtil.combineUser(post)
+                             }
+                         }
+                    });
+                }).catch(function(error) {
+                    res.status(500).send({
+                        "message": {
+                            "result": {
+                                "error": error
+                             }
+                         }
+                    });
                 });
             }).catch(function(error) {
                 res.status(500).send({

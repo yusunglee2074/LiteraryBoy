@@ -38,7 +38,6 @@ module.exports = function(sequelize, DataTypes) {
 				else {
 					values.lastcomment = {};
 				}
-                delete values.Readbook
 			}
 			return values;
 		  }

@@ -100,13 +100,13 @@ router.post('/:ISBN13', function(req, res) {
                             "readenddate": null,
                             "reading_page": 0,
                             "isbn13": book.get('isbn13'),
-                            "BookId": '12321215r23lkjhr23lk',
+                            "BookId": book.get('id'),
                             "UserId": user.get('id'),
                             "totalpage": page
                             }).then(function(readbook) {
                                 Model.Readbook.findOne({
                                     "where": {
-                                        "userid": req.get('user_id')
+                                        "id": readbook.id
                                     },
                                     "include": [Model.User]
                                 }).then(function(readbook) {
@@ -116,25 +116,17 @@ router.post('/:ISBN13', function(req, res) {
                                             "book": ormUtil.combineUser(ormUtil.dateToTimestamp(readbook))
                                          }
                                      }
+                                    });
                                 }).catch(function(error) {
                                     res.status(500).send({
                                         "message": {
                                             "result": {
-                                                "error": err
+                                                "error": error
                                              }
                                          }
                                     });
                                 });
                             });
-                        }).catch(function(err) {
-                            res.status(500).send({
-                                "message": {
-                                    "result": {
-                                        "error": err
-                                     }
-                                 }
-                            });
-                        });
                     }
                 }).catch(function(err) {
                     res.status(500).send({
@@ -153,7 +145,15 @@ router.post('/:ISBN13', function(req, res) {
                         "book": {}
                      }
                  }
-            });
+            }).catch(function(err) {
+                res.status(500).send({
+                    "message": {
+                        "result": {
+                            "error": err
+                         }
+                     }
+                    });
+                });
         }
     }).catch(function(error) {
         res.status(500).send({
@@ -232,7 +232,8 @@ router.get('/all', function(req, res) {
             Model.Readbook.findAll({
                 "where": {
                     "UserId": user.id
-                }
+                },
+                "include": [Model.User]
             }).then(function(allbook) {
                 if (!allbook) {
                     res.send({
