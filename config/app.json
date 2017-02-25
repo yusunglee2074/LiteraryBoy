@@ -16,7 +16,8 @@
 
     "avoidAcl": {
         "GET": [
-            "/"
+            "/",
+            "/api/v1/book/search"
         ],
         "POST": [
             "/api/v1/user"

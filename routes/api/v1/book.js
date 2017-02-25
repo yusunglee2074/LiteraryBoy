@@ -41,6 +41,8 @@ router.get('/search', function(req, res) {
                         } else {
                             callback(null);
                         }
+                    }).catch(function (book) {
+                        callback(null);
                     });
                 }, function() {
                     res.send({
@@ -74,8 +76,8 @@ router.post('/:ISBN13', function(req, res) {
         }
     }).then(function(book) {
         aladin.page_search(req.params['ISBN13'], function(error, response, body) {
-            var jbody = JSON.parse(body);
-            var page = jbody.item.bookinfo.itemPage;
+            var jbody = JSON.parse(body.replace(/;$/,''));
+            var page = jbody.item[0].bookinfo.itemPage;
             
             Model.User.findOne({
                 "where": {
@@ -89,19 +91,27 @@ router.post('/:ISBN13', function(req, res) {
 				"isbn13": book.get('isbn13'),
 				"BookId": book.get('id'),
 				"UserId": user.get('id'),
-                "page": page
+                "totalpage": page
 			}).then(function(readbook) {
 				res.send({
 					"message": {
 						"result": {
 							"book": readbook 
-                             }
-                         }
-                    });
-                });
+						 }
+					 }
+				});
+			});
+		}).catch(function(err) {
+            res.status(500).send({
+                "message": {
+                    "result": {
+                        "error": err
+                     }
+                 }
             });
-        });
+		});
     });
+});
 });
 
 router.delete('/:ISBN13', function(req, res) {
@@ -122,8 +132,7 @@ router.delete('/:ISBN13', function(req, res) {
         })
     }).catch(function(err) {
         // 오류 처리를 하는법 공부해서 리팩토링해야된다.
-        // TODO: status code 500 으로 반환해주세요
-        res.send({
+        res.status(500).send({
             "message":  "삭제실패.",
             "err": "해당 값의 책이 없습니다." 
 			});
