@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Model = require('../../../models');
+var ormUtil = require('../../../util/ormUtil');
 var sequelize = require('sequelize')
 
 router.post('/', function(req, res) {
@@ -37,7 +38,7 @@ router.get('/', function(req, res) {
 		res.json({
 			"message": {
 				"result": {
-					"user": user 
+					"user": ormUtil.dateToTimestamp(user)
 				}
 			}
 		});
@@ -76,7 +77,7 @@ router.put('/', function(req, res) {
 		res.send({
 			"message": {
 				"result": {
-					"user": user
+					"user": ormUtil.dateToTimestamp(user)
 					}
 				}
 			});
