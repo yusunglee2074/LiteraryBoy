@@ -16,6 +16,10 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			field: 'isbn13',
 		},
+		totalpage: {
+			type: DataTypes.INTEGER,
+			field: 'total_page',
+		},
     }, {
 		classMethods: {
 			associate: function(models) {
