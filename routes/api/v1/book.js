@@ -75,42 +75,60 @@ router.post('/:ISBN13', function(req, res) {
             "isbn13": req.params['ISBN13']
         }
     }).then(function(book) {
-        aladin.page_search(req.params['ISBN13'], function(error, response, body) {
-            var jbody = JSON.parse(body.replace(/;$/,''));
-            var page = jbody.item[0].bookinfo.itemPage;
-            
-            Model.User.findOne({
-                "where": {
-                    "userid": req.get('user_id')
-                }
-            }).then(function(user) {
-                Model.Readbook.create({
-                    "readstartdate": sequelize.fn('now'),
-                    "readenddate": null,
-                    "reading_page": 0,
-                    "isbn13": book.get('isbn13'),
-                    "BookId": book.get('id'),
-                    "UserId": user.get('id'),
-                    "totalpage": page
-                }).then(function(readbook) {
-                    res.send({
+        if (book) {
+            aladin.page_search(req.params['ISBN13'], function(error, response, body) {
+                var jbody = JSON.parse(body.replace(/;$/,''));
+                var page = jbody.item[0].bookinfo.itemPage;
+                
+                Model.User.findOne({
+                    "where": {
+                        "userid": req.get('user_id')
+                    }
+                }).then(function(user) {
+                    Model.Readbook.create({
+                        "readstartdate": sequelize.fn('now'),
+                        "readenddate": null,
+                        "reading_page": 0,
+                        "isbn13": book.get('isbn13'),
+                        "BookId": '12321215r23lkjhr23lk',
+                        "UserId": user.get('id'),
+                        "totalpage": page
+                    }).then(function(readbook) {
+                        res.send({
+                            "message": {
+                                "result": {
+                                    "book": readbook 
+                                 }
+                             }
+                        });
+                    }).catch(function(err) {
+                        res.status(500).send({
+                            "message": {
+                                "result": {
+                                    "error": err
+                                 }
+                             }
+                        });
+                    });
+                }).catch(function(err) {
+                    res.status(500).send({
                         "message": {
                             "result": {
-                                "book": readbook 
+                                "error": err
                              }
                          }
                     });
                 });
-            }).catch(function(err) {
-                res.status(500).send({
-                    "message": {
-                        "result": {
-                            "error": err
-                         }
-                     }
-                });
             });
-        });
+        } else {
+            res.send({
+                "message": {
+                    "result": {
+                        "book": {}
+                     }
+                 }
+            });
+        }
     }).catch(function(error) {
         res.status(500).send({
             "message": {
@@ -133,17 +151,19 @@ router.delete('/:ISBN13', function(req, res) {
 				"UserId": user.id,
 				"isbn13": req.params['ISBN13']
 			}
-    }).then(function(readbook) {
-        readbook.destroy()
-        res.send({
-            "message": "삭제 성공."
-        })
-    }).catch(function(err) {
-        // 오류 처리를 하는법 공부해서 리팩토링해야된다.
-        res.status(500).send({
-            "message":  "삭제실패.",
-            "err": "해당 값의 책이 없습니다." 
-			});
+        }).then(function(readbook) {
+            readbook.destroy()
+            res.send({
+                "message": "삭제 성공."
+            })
+        }).catch(function(err) {
+            res.status(500).send({
+                "message": {
+                    "result": {
+                        "error": err
+                     }
+                 }
+            });
         });
     });
 });
