@@ -83,35 +83,43 @@ router.post('/:ISBN13', function(req, res) {
                 "where": {
                     "userid": req.get('user_id')
                 }
-		}).then(function(user) {
-			Model.Readbook.create({
-				"readstartdate": sequelize.fn('now'),
-				"readenddate": null,
-				"reading_page": 0,
-				"isbn13": book.get('isbn13'),
-				"BookId": book.get('id'),
-				"UserId": user.get('id'),
-                "totalpage": page
-			}).then(function(readbook) {
-				res.send({
-					"message": {
-						"result": {
-							"book": readbook 
-						 }
-					 }
-				});
-			});
-		}).catch(function(err) {
-            res.status(500).send({
-                "message": {
-                    "result": {
-                        "error": err
+            }).then(function(user) {
+                Model.Readbook.create({
+                    "readstartdate": sequelize.fn('now'),
+                    "readenddate": null,
+                    "reading_page": 0,
+                    "isbn13": book.get('isbn13'),
+                    "BookId": book.get('id'),
+                    "UserId": user.get('id'),
+                    "totalpage": page
+                }).then(function(readbook) {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "book": readbook 
+                             }
+                         }
+                    });
+                });
+            }).catch(function(err) {
+                res.status(500).send({
+                    "message": {
+                        "result": {
+                            "error": err
+                         }
                      }
-                 }
+                });
             });
-		});
+        });
+    }).catch(function(error) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": err
+                 }
+             }
+        });
     });
-});
 });
 
 router.delete('/:ISBN13', function(req, res) {
