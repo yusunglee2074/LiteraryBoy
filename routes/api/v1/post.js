@@ -34,7 +34,7 @@ router.post('/:ISBN13', function(req, res) {
                      }
                 });
             }).catch(function(error) {
-                res.send({
+                res.status(500).send({
                     "message": {
                         "result": {
                             "error": error
@@ -43,7 +43,7 @@ router.post('/:ISBN13', function(req, res) {
                 });
             });
         }).catch(function(error) {
-            res.send({
+            res.status(500).send({
                 "message": {
                     "result": {
                         "error": error
@@ -52,7 +52,7 @@ router.post('/:ISBN13', function(req, res) {
             });
         });
     }).catch(function(error) {
-        res.send({
+        res.status(500).send({
             "message": {
                 "result": {
                     "error": error
@@ -74,9 +74,12 @@ router.delete('/:postId', function(req, res) {
             "message": "삭제 성공."
         })
     }).catch(function() {
-        // Readbook 삭제와 똑같이 오류 처리 해야함
-        res.send({
-            "message": "삭제실패."
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+             }
         });
     });
 });
@@ -104,17 +107,41 @@ router.get('/:ISBN13/my', function(req, res) {
                     "where": { 'isbn13': req.params['ISBN13'] }
                 },
                 */
-    }).then(function(post) {
-        res.json({
-            "message": {
-                "result": {
-                    "post": {
-                        "posts": post 
+            }).then(function(post) {
+                res.json({
+                    "message": {
+                        "result": {
+                            "post": {
+                                "posts": post 
                              }
                          }
                     }
                 });
+            }).catch(function(error) {
+                res.status(500).send({
+                    "message": {
+                        "result": {
+                            "error": error
+                         }
+                     }
+                });
             });
+        }).catch(function(error) {
+            res.status(500).send({
+                "message": {
+                    "result": {
+                        "error": error
+                     }
+                 }
+            });
+        });
+    }).catch(function(error) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+             }
         });
     });
 });
@@ -129,16 +156,32 @@ router.get('/:ISBN13/all', function(req, res) {
             "where": {
                 "ReadbookId": readbook.id
             }
-    }).then(function(post) {
-        res.send({
-            "message": {
-                "result": {
-                    "post": {
-                        "posts": post 
+        }).then(function(post) {
+            res.send({
+                "message": {
+                    "result": {
+                        "post": {
+                            "posts": post 
                          }
                      }
                 }
             });
+        }).catch(function(error) {
+            res.status(500).send({
+                "message": {
+                    "result": {
+                        "error": error
+                     }
+                 }
+            });
+        });
+    }).catch(function(error) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+             }
         });
     });
 });
@@ -156,14 +199,30 @@ router.put('/:postid', function(req, res) {
             imagepath: req.body.imageUrl,
             theme: req.body.theme,
             type: req.body.type
-    }).then(function(post) {
-        res.send({
-            "message": {
-                "result": {
-                    "post": post 
+        }).then(function(post) {
+            res.send({
+                "message": {
+                    "result": {
+                        "post": post 
                     }
                 }
             });
+        }).catch(function(error) {
+            res.status(500).send({
+                "message": {
+                    "result": {
+                        "error": error
+                     }
+                 }
+            });
+        });
+    }).catch(function(error) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+             }
         });
     });
 });
