@@ -21,7 +21,7 @@ router.get('/search', function(req, res) {
                         "bookId"       : item.isbn13,
                         "name"         : item.title,
                         "author"       : item.author,
-                        "page"         : Math.round(Math.random()*100 + Math.random()*300),
+                        "page"         : Math.round(Math.random()*180) + 180,
                         "pub_nm"       : item.pub_nm,
                         "pub_date"     : Math.round(new Date(item.pub_date.substr(0,4), item.pub_date.substr(4,2) - 1, item.pub_date.substr(6,2)).getTime()/1000),
                         "thumbnailUrl" : item.cover_l_url
@@ -96,9 +96,12 @@ router.post('/:ISBN13', function(req, res) {
                          }
                     });
                 } else {
-                    aladin.page_search(req.params['ISBN13'], function(error, response, body) {
-                        var jbody = JSON.parse(body.replace(/;$/,''));
-                        var page = jbody.item[0].bookinfo.itemPage;
+                    aladin.page_search(req.params['ISBN13'], function(error, response, body, jbody) {
+                        // var jbody = JSON.parse(body.replace(/;$/,''));
+                        var page = Math.round(Math.random()*180) + 180;
+                        if (jbody.item) {
+                            var page = jbody.item[0].bookinfo.itemPage;
+                        }
                         
                         Model.User.findOne({
                             "where": {
@@ -156,6 +159,9 @@ router.post('/:ISBN13', function(req, res) {
                                  }
                             });
                         });
+
+
+
                     });
                 }
 			}).catch(function(err) {
