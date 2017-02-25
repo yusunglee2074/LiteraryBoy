@@ -20,7 +20,8 @@
             "/api/v1/book/search"
         ],
         "POST": [
-            "/api/v1/user"
+            "/api/v1/user",
+            "/api/v1/image/add"
         ]
     }
 }
