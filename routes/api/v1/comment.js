@@ -10,41 +10,61 @@ router.post('/:POSTID', function(req, res) {
 			"id": req.params['POSTID']
 		}
 	}).then(function(post) {
-		Model.User.findOne({
-			"where": {
-				"userid": req.get('user_id')
-			}
-		}).then(function(user) {
-			Model.Comment.create({
-				"content": req.body.content,
-				"UserId": user.id,
-				"PostId": post.id
-				}).then(function(comment) {
-					res.send({
-						"message": {
-							"result": {
-								"comment": comment 
-							 }
-						}
-					});
-				}).catch(function(error) {
-                    res.status(500).send({
-                        "message": {
-                            "result": {
-                                "error": error
-                             }
-                         }
-                    });
-                });
-        }).catch(function(error) {
-            res.status(500).send({
+        if(!post) {
+            res.send({
                 "message": {
                     "result": {
-                        "error": error
+                        "post": {}
                      }
                  }
             });
-        });
+        } else {
+            Model.User.findOne({
+                "where": {
+                    "userid": req.get('user_id')
+                }
+            }).then(function(user) {
+                if (!user) {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "user": {}
+                             }
+                         }
+                    });
+                } else {
+                    Model.Comment.create({
+                        "content": req.body.content,
+                        "UserId": user.id,
+                        "PostId": post.id
+                    }).then(function(comment) {
+                        res.send({
+                            "message": {
+                                "result": {
+                                    "comment": comment 
+                                 }
+                            }
+                        });
+                    }).catch(function(error) {
+                        res.status(500).send({
+                            "message": {
+                                "result": {
+                                    "error": error
+                                 }
+                             }
+                        });
+                    });
+                }
+            }).catch(function(error) {
+                res.status(500).send({
+                    "message": {
+                        "result": {
+                            "error": error
+                         }
+                     }
+                });
+            });
+        }
     }).catch(function(error) {
         res.status(500).send({
             "message": {
@@ -64,8 +84,18 @@ router.delete('/:commentId', function(req, res) {
 			"id": req.params['commentId']
 		}
 	}).then(function(comment) {
-		// 자신의 것이 아닌 코멘트는 삭제 안되게 해야함
-		comment.destroy()
+        if (!comment) {
+            res.send({
+                "message": {
+                    "result": {
+                        "comment": {}
+                     }
+                 }
+            });
+        } else {
+            // 자신의 것이 아닌 코멘트는 삭제 안되게 해야함
+            comment.destroy()
+        }
 	}).then(function() {
 		res.send({
 			"message": "삭제성공했습니다."
@@ -87,15 +117,27 @@ router.get('/:postId/list', function(req, res) {
 			"PostId": req.params['postId']
 		}
 	}).then(function(comment) {
-		res.send({
-			"message": {
-				"result": {
-					"comment": {
-						"comments": comment
-					}
-				 }
-			}
-		});
+        if (!comment) {
+            res.send({
+                "message": {
+                    "result": {
+                        "comment": {
+                            "comments": []
+                        }
+                     }
+                 }
+            });
+        } else {
+            res.send({
+                "message": {
+                    "result": {
+                        "comment": {
+                            "comments": comment
+                        }
+                     }
+                }
+            });
+        }
 	}).catch(function(error) {
         res.status(500).send({
             "message": {
@@ -113,21 +155,43 @@ router.get('/my', function(req, res) {
 			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		Model.Comment.findAll({
-			"where": {
-				"UserId": user.id
-			}
-	}).then(function(comment) {
-		res.send({
-			"message": {
-				"result": {
-					"comment": {
-						"comments": comment 
-						 }
-					 }
-				}
-			});
-		});
+        if (!user) {
+            res.send({
+                "message": {
+                    "result": {
+                        "user": {}
+                     }
+                 }
+            });
+        } else {
+            Model.Comment.findAll({
+                "where": {
+                    "UserId": user.id
+                }
+            }).then(function(comment) {
+                if(!comment) {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "comment": {
+                                    "comments": []
+                                 }
+                             }
+                        }
+                    });
+                } else {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "comment": {
+                                    "comments": comment 
+                                 }
+                             }
+                        }
+                    });
+                }
+            });
+        }
 	}).catch(function(error) {
         res.status(500).send({
             "message": {
@@ -145,25 +209,35 @@ router.put('/:commentId', function(req, res) {
 			"id": req.params['commentId']
 		}
 	}).then(function(comment) {
-		comment.update({
-			content: req.body.content
-        }).then(function(comment) {
+        if (!comment) {
             res.send({
                 "message": {
                     "result": {
-                        "comment": comment
-                    }
-                }
-            });
-        }).catch(function(error) {
-            res.status(500).send({
-                "message": {
-                    "result": {
-                        "error": error
+                        "comment": {}
                      }
                  }
             });
-        });
+        } else {
+            comment.update({
+                content: req.body.content
+            }).then(function(comment) {
+                res.send({
+                    "message": {
+                        "result": {
+                            "comment": comment
+                        }
+                    }
+                });
+            }).catch(function(error) {
+                res.status(500).send({
+                    "message": {
+                        "result": {
+                            "error": error
+                         }
+                     }
+                });
+            });
+        }
 	}).catch(function(error) {
         res.status(500).send({
             "message": {

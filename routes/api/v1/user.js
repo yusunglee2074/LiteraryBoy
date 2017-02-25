@@ -41,13 +41,23 @@ router.get('/', function(req, res) {
 			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		res.json({
-			"message": {
-				"result": {
-					"user": user 
-				}
-			}
-		});
+        if (!user) {
+            res.send({
+                "message": {
+                    "result": {
+                        "user": {}
+                     }
+                 }
+            });
+        } else {
+            res.json({
+                "message": {
+                    "result": {
+                        "user": user 
+                    }
+                }
+            });
+        }
 	}).catch(function(error) {
         res.status(500).send({
             "message": {
@@ -65,10 +75,20 @@ router.delete('/', function(req, res) {
 			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		user.destroy()
-		res.send({
-			"message": "삭제 성공"
-		});
+        if (!user) {
+            res.send({
+                "message": {
+                    "result": {
+                        "user": {}
+                     }
+                 }
+            });
+        } else {
+            user.destroy()
+            res.send({
+                "message": "삭제 성공"
+            });
+        }
 	}).catch(function(error) {
         res.status(500).send({
             "message": {
@@ -86,26 +106,36 @@ router.put('/', function(req, res) {
 			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		user.update({
-			"nickname": req.body.nickname,
-			"profileimage": req.body.imageUrl
-	}).then(function(user) {
-		res.send({
-			"message": {
-				"result": {
-					"user": user
-					}
-				}
-			});
-    }).catch(function(error) {
-            res.status(500).send({
+        if (!user) {
+            res.send({
                 "message": {
                     "result": {
-                        "error": error
+                        "user": {}
                      }
                  }
             });
-        });
+        } else {
+            user.update({
+                "nickname": req.body.nickname,
+                "profileimage": req.body.imageUrl
+            }).then(function(user) {
+                res.send({
+                    "message": {
+                        "result": {
+                            "user": user
+                        }
+                    }
+                });
+        }).catch(function(error) {
+                res.status(500).send({
+                    "message": {
+                        "result": {
+                            "error": error
+                         }
+                     }
+                });
+            });
+        }
 	}).catch(function(error) {
         res.status(500).send({
             "message": {

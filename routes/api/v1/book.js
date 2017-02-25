@@ -85,31 +85,41 @@ router.post('/:ISBN13', function(req, res) {
                         "userid": req.get('user_id')
                     }
                 }).then(function(user) {
-                    Model.Readbook.create({
-                        "readstartdate": sequelize.fn('now'),
-                        "readenddate": null,
-                        "reading_page": 0,
-                        "isbn13": book.get('isbn13'),
-                        "BookId": '12321215r23lkjhr23lk',
-                        "UserId": user.get('id'),
-                        "totalpage": page
-                    }).then(function(readbook) {
+                    if (!user) {
                         res.send({
                             "message": {
                                 "result": {
-                                    "book": readbook 
+                                    "user": {}
                                  }
                              }
                         });
-                    }).catch(function(err) {
-                        res.status(500).send({
-                            "message": {
-                                "result": {
-                                    "error": err
+                    } else {
+                        Model.Readbook.create({
+                            "readstartdate": sequelize.fn('now'),
+                            "readenddate": null,
+                            "reading_page": 0,
+                            "isbn13": book.get('isbn13'),
+                            "BookId": '12321215r23lkjhr23lk',
+                            "UserId": user.get('id'),
+                            "totalpage": page
+                        }).then(function(readbook) {
+                            res.send({
+                                "message": {
+                                    "result": {
+                                        "book": readbook 
+                                     }
                                  }
-                             }
+                            });
+                        }).catch(function(err) {
+                            res.status(500).send({
+                                "message": {
+                                    "result": {
+                                        "error": err
+                                     }
+                                 }
+                            });
                         });
-                    });
+                    }
                 }).catch(function(err) {
                     res.status(500).send({
                         "message": {
@@ -146,25 +156,45 @@ router.delete('/:ISBN13', function(req, res) {
 			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		Model.Readbook.findOne({
-			"where": {
-				"UserId": user.id,
-				"isbn13": req.params['ISBN13']
-			}
-        }).then(function(readbook) {
-            readbook.destroy()
+        if (!user) {
             res.send({
-                "message": "삭제 성공."
-            })
-        }).catch(function(err) {
-            res.status(500).send({
                 "message": {
                     "result": {
-                        "error": err
+                        "user": {}
                      }
                  }
             });
-        });
+        } else {
+            Model.Readbook.findOne({
+                "where": {
+                    "UserId": user.id,
+                    "isbn13": req.params['ISBN13']
+                }
+            }).then(function(readbook) {
+                if (!readbook) {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "readbook": {}
+                             }
+                         }
+                    });
+                } else {
+                    readbook.destroy()
+                    res.send({
+                        "message": "삭제 성공."
+                    })
+                }
+            }).catch(function(err) {
+                res.status(500).send({
+                    "message": {
+                        "result": {
+                            "error": err
+                         }
+                     }
+                });
+            });
+        }
     });
 });
 
@@ -174,21 +204,41 @@ router.get('/all', function(req, res) {
 			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		Model.Readbook.findAll({
-			"where": {
-				"UserId": user.id
-			}
-    }).then(function(allbook) {
-        res.send({
-            "message": {
-                "result": {
-                    "bookList": {
-                        "books": allbook 
-                         }
+        if (!user) {
+            res.send({
+                "message": {
+                    "result": {
+                        "user": {}
                      }
+                 }
+            });
+        } else {
+            Model.Readbook.findAll({
+                "where": {
+                    "UserId": user.id
                 }
-			});
-        });
+            }).then(function(allbook) {
+                if (!allbook) {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "readbooks": []
+                             }
+                         }
+                    });
+                } else {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "bookList": {
+                                    "books": allbook 
+                                 }
+                             }
+                        }
+                    });
+                }
+            });
+        }
     })
 });
 
@@ -198,20 +248,40 @@ router.get('/:ISBN13', function(req, res) {
 			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		Model.Readbook.findOne({
-			"where": {
-				"UserId": user.id,
-				"isbn13": req.params['ISBN13']
-			}
-    }).then(function(book) {
-        res.send({
-            "message": {
-                "result": {
-                    "book": book,
-					 }
-				 }
-			});
-        })
+        if (!user) {
+            res.send({
+                "message": {
+                    "result": {
+                        "user": {}
+                     }
+                }
+            });
+        } else {
+            Model.Readbook.findOne({
+                "where": {
+                    "UserId": user.id,
+                    "isbn13": req.params['ISBN13']
+                }
+            }).then(function(book) {
+                if (!book) {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "book": {}
+                             }
+                        }
+                    });
+                } else {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "book": book,
+                             }
+                         }
+                    });
+                }
+            })
+        }
     });
 });
 
