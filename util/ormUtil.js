@@ -29,6 +29,7 @@ module.exports = {
                     obj.dataValues[i].user_id = obj.dataValues[i].User.userid; 
                     obj.dataValues[i].profileimage = obj.dataValues[i].User.profileimage; 
                     delete obj.dataValues[i].User;
+                    delete obj.dataValues[i].UserId;
                 }
             }
         } else {
@@ -36,6 +37,7 @@ module.exports = {
             obj.dataValues.user_id = obj.dataValues.User.userid; 
             obj.dataValues.profileimage = obj.dataValues.User.profileimage; 
             delete obj.dataValues.User;
+            delete obj.dataValues.UserId;
         }
         return obj;
     }
