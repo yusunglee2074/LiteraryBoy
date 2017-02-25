@@ -1,6 +1,7 @@
 var express = require('express');
 var async = require('async');
 var daum = require('../../../util/daum');
+var aladin = require('../../../util/add_page_with_aladin');
 var router = express.Router();
 var Model = require('../../../models');
 var sequelize = require('sequelize')
@@ -72,10 +73,14 @@ router.post('/:ISBN13', function(req, res) {
             "isbn13": req.params['ISBN13']
         }
     }).then(function(book) {
-        Model.User.findOne({
-            "where": {
-                "userid": req.get('user_id')
-            }
+        aladin.page_search(req.params['ISBN13'], function(error, response, body) {
+            var jbody = JSON.parse(body);
+            var page = jbody.item.bookinfo.itemPage;
+            
+            Model.User.findOne({
+                "where": {
+                    "userid": req.get('user_id')
+                }
 		}).then(function(user) {
 			Model.Readbook.create({
 				"readstartdate": sequelize.fn('now'),
@@ -83,17 +88,19 @@ router.post('/:ISBN13', function(req, res) {
 				"reading_page": 0,
 				"isbn13": book.get('isbn13'),
 				"BookId": book.get('id'),
-				"UserId": user.get('id')
+				"UserId": user.get('id'),
+                "page": page
 			}).then(function(readbook) {
 				res.send({
 					"message": {
 						"result": {
 							"book": readbook 
-						 }
-					 }
-				});
-			});
-		});
+                             }
+                         }
+                    });
+                });
+            });
+        });
     });
 });
 
