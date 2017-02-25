@@ -4,6 +4,7 @@ var daum = require('../../../util/daum');
 var aladin = require('../../../util/add_page_with_aladin');
 var router = express.Router();
 var Model = require('../../../models');
+var ormUtil = require('../../../util/ormUtil');
 var sequelize = require('sequelize')
 
 
@@ -96,7 +97,7 @@ router.post('/:ISBN13', function(req, res) {
                     res.send({
                         "message": {
                             "result": {
-                                "book": readbook 
+                                "book": ormUtil.combineUser(ormUtil.dateToTimestamp(readbook))
                              }
                          }
                     });
@@ -163,8 +164,8 @@ router.get('/all', function(req, res) {
             "message": {
                 "result": {
                     "bookList": {
-                        "books": allbook 
-                         }
+                        "books": ormUtil.combineUser(ormUtil.dateToTimestamp(allbook))
+                        }
                      }
                 }
 			});
@@ -182,12 +183,13 @@ router.get('/:ISBN13', function(req, res) {
 			"where": {
 				"UserId": user.id,
 				"isbn13": req.params['ISBN13']
-			}
+			},
+            include: [Model.User]
     }).then(function(book) {
         res.send({
             "message": {
                 "result": {
-                    "book": book,
+                    "book": ormUtil.combineUser(ormUtil.dateToTimestamp(book))
 					 }
 				 }
 			});
