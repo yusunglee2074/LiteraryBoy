@@ -4,6 +4,7 @@ var daum = require('../../../util/daum');
 var aladin = require('../../../util/add_page_with_aladin');
 var router = express.Router();
 var Model = require('../../../models');
+var ormUtil = require('../../../util/ormUtil');
 var sequelize = require('sequelize')
 
 
@@ -102,13 +103,28 @@ router.post('/:ISBN13', function(req, res) {
                             "BookId": '12321215r23lkjhr23lk',
                             "UserId": user.get('id'),
                             "totalpage": page
-                        }).then(function(readbook) {
-                            res.send({
-                                "message": {
-                                    "result": {
-                                        "book": readbook 
+                            }).then(function(readbook) {
+                                Model.Readbook.findOne({
+                                    "where": {
+                                        "userid": req.get('user_id')
+                                    },
+                                    "include": [Model.User]
+                                }).then(function(readbook) {
+                                    res.send({
+                                    "message": {
+                                        "result": {
+                                            "book": ormUtil.combineUser(ormUtil.dateToTimestamp(readbook))
+                                         }
                                      }
-                                 }
+                                }).catch(function(error) {
+                                    res.status(500).send({
+                                        "message": {
+                                            "result": {
+                                                "error": err
+                                             }
+                                         }
+                                    });
+                                });
                             });
                         }).catch(function(err) {
                             res.status(500).send({
@@ -231,7 +247,7 @@ router.get('/all', function(req, res) {
                         "message": {
                             "result": {
                                 "bookList": {
-                                    "books": allbook 
+                                    "books": ormUtil.combineUser(ormUtil.dateToTimestamp(allbook))
                                  }
                              }
                         }
@@ -261,7 +277,8 @@ router.get('/:ISBN13', function(req, res) {
                 "where": {
                     "UserId": user.id,
                     "isbn13": req.params['ISBN13']
-                }
+                },
+                include: [Model.User]
             }).then(function(book) {
                 if (!book) {
                     res.send({
@@ -276,6 +293,7 @@ router.get('/:ISBN13', function(req, res) {
                         "message": {
                             "result": {
                                 "book": book,
+                                "book": ormUtil.combineUser(ormUtil.dateToTimestamp(book))
                              }
                          }
                     });
