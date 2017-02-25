@@ -31,7 +31,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next) {
-    if ( (appConfig.avoidAcl[req.method] && appConfig.avoidAcl[req.method].indexOf(req.path) > -1) || (req.path == "/api/v1/test") ) {
+    if ( (appConfig.avoidAcl[req.method] && appConfig.avoidAcl[req.method].indexOf(req.path) > -1) || (req.path == "/api/v1/test") || req.path.match(/\/image\/*/) ) {
         // not necessary user token
         console.log('not rq user token');
         next();
