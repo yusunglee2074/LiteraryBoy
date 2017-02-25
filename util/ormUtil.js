@@ -2,13 +2,13 @@ var _ = require("underscore");
 
 module.exports = {
     dateToTimestamp: function(obj) {
-        if (_.isArray(obj.dataValues)) {
-            if (obj.dataValues.length > 0) {
-                for (var i = 0; i < obj.dataValues.length; i++) {
-                    obj.dataValues[i].createdAt = Math.round(obj.dataValues[i].createdAt.getTime()/1000);
-                    obj.dataValues[i].updatedAt = Math.round(obj.dataValues[i].updatedAt.getTime()/1000);
-                    if (obj.dataValues[i].readstartdate) {
-                        obj.dataValues[i].readstartdate = Math.round(obj.dataValues[i].readstartdate.getTime()/1000);
+        if (_.isArray(obj)) {
+            if (obj.length > 0) {
+                for (var i = 0; i < obj.length; i++) {
+                    obj[i].dataValues.createdAt = Math.round(obj[i].dataValues.createdAt.getTime()/1000);
+                    obj[i].dataValues.updatedAt = Math.round(obj[i].dataValues.updatedAt.getTime()/1000);
+                    if (obj[i].dataValues.readstartdate) {
+                        obj[i].dataValues.readstartdate = Math.round(obj[i].dataValues.readstartdate.getTime()/1000);
                     }
                 }
             }
@@ -22,14 +22,14 @@ module.exports = {
         return obj;
     },
     combineUser: function(obj) {
-        if (_.isArray(obj.dataValues)) {
-            if (obj.dataValues.length > 0) {
-                for (var i = 0; i < obj.dataValues.length; i++) {
-                    obj.dataValues[i].nickname = obj.dataValues[i].User.nickname;
-                    obj.dataValues[i].user_id = obj.dataValues[i].User.userid; 
-                    obj.dataValues[i].profileimage = obj.dataValues[i].User.profileimage; 
-                    delete obj.dataValues[i].User;
-                    delete obj.dataValues[i].UserId;
+        if (_.isArray(obj)) {
+            if (obj.length > 0) {
+                for (var i = 0; i < obj.length; i++) {
+                    obj[i].dataValues.nickname = obj[i].dataValues.User.nickname;
+                    obj[i].dataValues.user_id = obj[i].dataValues.User.userid; 
+                    obj[i].dataValues.profileimage = obj[i].dataValues.User.profileimage; 
+                    delete obj[i].dataValues.User;
+                    delete obj[i].dataValues.UserId;
                 }
             }
         } else {

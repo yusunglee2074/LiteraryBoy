@@ -69,78 +69,115 @@ router.get('/search', function(req, res) {
 });
 
 router.post('/:ISBN13', function(req, res) {
-    // if 이미 추가된 책인가? (유저 id와 isbn13의 값으로 검증)
-        // 추가 된 책이면 추가 됬다고 안내
-    // 추가 된 책이 아닐시 유저 id와 책 ISBN을 받아서 Readbook 오브젝트를 만든다.
     Model.Book.findOne({
         "where": {
             "isbn13": req.params['ISBN13']
         }
     }).then(function(book) {
-		Model.Readbook.findAll({
-			"where": {
-				"UserId": user.id,
-                "isbn13": req.params['ISBN13']
-			},
-            "include" : [Model.User]
-        }).then(function(readbook) {
-            if (readbook) {
-                res.send({
-                    "message": {
-                        "result": {
-                            "book": ormUtil.combineUser(ormUtil.dateToTimestamp(readbook))
+        Model.User.findOne({
+            "where": {
+                "userid": req.get('user_id')
+            }
+        }).then(function(user) {
+            Model.Readbook.findOne({
+                "where": {
+                    "UserId": user.id,
+                    "BookId": book.id
+				},
+                "include": [Model.User]
+                
+			}).then(function(readbook) {
+                if (readbook) {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "book": ormUtil.combineUser(ormUtil.dateToTimestamp(readbook))
+                             }
                          }
-                     }
-                });
-            } else {
-                aladin.page_search(req.params['ISBN13'], function(error, response, body) {
-                    var jbody = JSON.parse(body.replace(/;$/,''));
-                    var page = jbody.item[0].bookinfo.itemPage;
-                    
-                    Model.User.findOne({
-                        "where": {
-                            "userid": req.get('user_id')
-                        }
-                    }).then(function(user) {
-                        Model.Readbook.create({
-                            "readstartdate": sequelize.fn('now'),
-                            "readenddate": null,
-                            "reading_page": 0,
-                            "isbn13": book.get('isbn13'),
-                            "BookId": book.get('id'),
-                            "UserId": user.get('id'),
-                            "totalpage": page
-                        }).then(function(readbook) {
-                            res.send({
+                    });
+                } else {
+                    aladin.page_search(req.params['ISBN13'], function(error, response, body) {
+                        var jbody = JSON.parse(body.replace(/;$/,''));
+                        var page = jbody.item[0].bookinfo.itemPage;
+                        
+                        Model.User.findOne({
+                            "where": {
+                                "userid": req.get('user_id')
+                            }
+                        }).then(function(user) {
+                            if (!user) {
+                                res.send({
+                                    "message": {
+                                        "result": {
+                                            "user": {}
+                                         }
+                                     }
+                                });
+                            } else {
+                                Model.Readbook.create({
+                                    "readstartdate": sequelize.fn('now'),
+                                    "readenddate": null,
+                                    "reading_page": 0,
+                                    "isbn13": book.get('isbn13'),
+                                    "BookId": book.get('id'),
+                                    "UserId": user.get('id'),
+                                    "totalpage": page
+                                    }).then(function(readbook) {
+                                        Model.Readbook.findOne({
+                                            "where": {
+                                                "id": readbook.id
+                                            },
+                                            "include": [Model.User]
+                                        }).then(function(readbook) {
+                                            res.send({
+                                            "message": {
+                                                "result": {
+                                                    "book": ormUtil.combineUser(ormUtil.dateToTimestamp(readbook))
+                                                 }
+                                             }
+                                            });
+                                        }).catch(function(error) {
+                                            res.status(501).send({
+                                                "message": {
+                                                    "result": {
+                                                        "error": error
+                                                     }
+                                                 }
+                                            });
+                                        });
+                                    });
+                            }
+                        }).catch(function(err) {
+                            res.status(502).send({
                                 "message": {
                                     "result": {
-                                        "book": ormUtil.combineUser(ormUtil.dateToTimestamp(readbook))
+                                        "error": err
                                      }
                                  }
                             });
                         });
-                    }).catch(function(err) {
-                        res.status(500).send({
-                            "message": {
-                                "result": {
-                                    "error": err
-                                 }
-                             }
-                        });
                     });
+                }
+			}).catch(function(err) {
+                res.status(503).send({
+                    "message": {
+                        "result": {
+                            "error": err
+                         }
+                     }
                 });
-            }
-        }).catch(function(error) {
-            res.status(500).send({
+			});
+        }).catch(function(err) {
+            res.status(504).send({
                 "message": {
                     "result": {
                         "error": err
                      }
                  }
             });
-        });
-    }).catch(function(error) {
-        res.status(500).send({
+		});
+    }).catch(function(err) {
+        res.status(505).send({
             "message": {
                 "result": {
                     "error": err
@@ -156,23 +193,45 @@ router.delete('/:ISBN13', function(req, res) {
 			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		Model.Readbook.findOne({
-			"where": {
-				"UserId": user.id,
-				"isbn13": req.params['ISBN13']
-			}
-    }).then(function(readbook) {
-        readbook.destroy()
-        res.send({
-            "message": "삭제 성공."
-        })
-    }).catch(function(err) {
-        // 오류 처리를 하는법 공부해서 리팩토링해야된다.
-        res.status(500).send({
-            "message":  "삭제실패.",
-            "err": "해당 값의 책이 없습니다." 
-			});
-        });
+        if (!user) {
+            res.send({
+                "message": {
+                    "result": {
+                        "user": {}
+                     }
+                 }
+            });
+        } else {
+            Model.Readbook.findOne({
+                "where": {
+                    "UserId": user.id,
+                    "isbn13": req.params['ISBN13']
+                }
+            }).then(function(readbook) {
+                if (!readbook) {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "readbook": {}
+                             }
+                         }
+                    });
+                } else {
+                    readbook.destroy()
+                    res.send({
+                        "message": "삭제 성공."
+                    })
+                }
+            }).catch(function(err) {
+                res.status(500).send({
+                    "message": {
+                        "result": {
+                            "error": err
+                         }
+                     }
+                });
+            });
+        }
     });
 });
 
@@ -182,21 +241,42 @@ router.get('/all', function(req, res) {
 			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		Model.Readbook.findAll({
-			"where": {
-				"UserId": user.id
-			}
-    }).then(function(allbook) {
-        res.send({
-            "message": {
-                "result": {
-                    "bookList": {
-                        "books": ormUtil.combineUser(ormUtil.dateToTimestamp(allbook))
-                        }
+        if (!user) {
+            res.send({
+                "message": {
+                    "result": {
+                        "user": {}
                      }
+                 }
+            });
+        } else {
+            Model.Readbook.findAll({
+                "where": {
+                    "UserId": user.id
+                },
+                "include": [Model.User]
+            }).then(function(allbook) {
+                if (!allbook) {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "readbooks": []
+                             }
+                         }
+                    });
+                } else {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "bookList": {
+                                    "books": ormUtil.combineUser(ormUtil.dateToTimestamp(allbook))
+                                 }
+                             }
+                        }
+                    });
                 }
-			});
-        });
+            });
+        }
     })
 });
 
@@ -206,21 +286,42 @@ router.get('/:ISBN13', function(req, res) {
 			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		Model.Readbook.findOne({
-			"where": {
-				"UserId": user.id,
-				"isbn13": req.params['ISBN13']
-			},
-            include: [Model.User]
-    }).then(function(book) {
-        res.send({
-            "message": {
-                "result": {
-                    "book": ormUtil.combineUser(ormUtil.dateToTimestamp(book))
-					 }
-				 }
-			});
-        })
+        if (!user) {
+            res.send({
+                "message": {
+                    "result": {
+                        "user": {}
+                     }
+                }
+            });
+        } else {
+            Model.Readbook.findOne({
+                "where": {
+                    "UserId": user.id,
+                    "isbn13": req.params['ISBN13']
+                },
+                include: [Model.User]
+            }).then(function(book) {
+                if (!book) {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "book": {}
+                             }
+                        }
+                    });
+                } else {
+                    res.send({
+                        "message": {
+                            "result": {
+                                "book": book,
+                                "book": ormUtil.combineUser(ormUtil.dateToTimestamp(book))
+                             }
+                         }
+                    });
+                }
+            })
+        }
     });
 });
 

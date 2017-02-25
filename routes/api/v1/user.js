@@ -18,14 +18,21 @@ router.post('/', function(req, res) {
                 }).then(function(user) {
                     res.send("SUCCESS");
                 }).catch(function(err) {
-                    res.send("FAIL\t" + err);
+                    res.status(500).send("FAIL\t" + err);
                     console.log(err);
                 });
             } else {
                 res.status(500).send("FAIL");
-                console.log("req.bodyuser_id is null");
             }
 		}
+	}).catch(function(error) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+             }
+        });
 	});
 });
 
@@ -35,14 +42,32 @@ router.get('/', function(req, res) {
 			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		res.json({
-			"message": {
-				"result": {
-					"user": ormUtil.dateToTimestamp(user)
-				}
-			}
-		});
-	});
+        if (!user) {
+            res.send({
+                "message": {
+                    "result": {
+                        "user": {}
+                     }
+                 }
+            });
+        } else {
+            res.json({
+                "message": {
+                    "result": {
+                        "user": ormUtil.dateToTimestamp(user)
+                    }
+                }
+            });
+        }
+	}).catch(function(error) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+             }
+        });
+    });
 });
 
 router.delete('/', function(req, res) {
@@ -51,16 +76,28 @@ router.delete('/', function(req, res) {
 			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		console.log(user);
-		user.destroy()
-		res.send({
-			"message": "삭제 성공"
-		})
-	}).catch(function(err) {
-		res.status(err.status || 500);
-		res.send({
-			"message": err
-		})
+        if (!user) {
+            res.send({
+                "message": {
+                    "result": {
+                        "user": {}
+                     }
+                 }
+            });
+        } else {
+            user.destroy()
+            res.send({
+                "message": "삭제 성공"
+            });
+        }
+	}).catch(function(error) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+             }
+        });
 	});
 });
 
@@ -70,19 +107,45 @@ router.put('/', function(req, res) {
 			"userid": req.get('user_id')
 		}
 	}).then(function(user) {
-		user.update({
-			"nickname": req.body.nickname,
-			"profileimage": req.body.imageUrl
-	}).then(function(user) {
-		res.send({
-			"message": {
-				"result": {
-					"user": ormUtil.dateToTimestamp(user)
-					}
-				}
-			});
-		});
-	});
+        if (!user) {
+            res.send({
+                "message": {
+                    "result": {
+                        "user": {}
+                     }
+                 }
+            });
+        } else {
+            user.update({
+                "nickname": req.body.nickname,
+                "profileimage": req.body.imageUrl
+            }).then(function(user) {
+                res.send({
+                    "message": {
+                        "result": {
+                            "user": ormUtil.dateToTimestamp(user)
+                        }
+                    }
+                });
+        }).catch(function(error) {
+                res.status(500).send({
+                    "message": {
+                        "result": {
+                            "error": error
+                         }
+                     }
+                });
+            });
+        }
+	}).catch(function(error) {
+        res.status(500).send({
+            "message": {
+                "result": {
+                    "error": error
+                 }
+            }
+        });
+    });
 });
 				
 module.exports = router;
