@@ -1,0 +1,87 @@
+9권
+Book = {
+    "bookId" : "9788935208647",
+    "name" : "",
+    "author" : "",
+    "thumbnailUrl" : "",
+    "totalPage" : "",
+}
+Book = {
+    "bookId" : "",
+    "name" : "",
+    "author" : "",
+    "thumbnailUrl" : "",
+    "totalPage" : "",
+}
+Book = {
+    "bookId" : "",
+    "name" : "",
+    "author" : "",
+    "thumbnailUrl" : "",
+    "totalPage" : "",
+}
+Book = {
+    "bookId" : "",
+    "name" : "",
+    "author" : "",
+    "thumbnailUrl" : "",
+    "totalPage" : "",
+}
+Book = {
+    "bookId" : "",
+    "name" : "",
+    "author" : "",
+    "thumbnailUrl" : "",
+    "totalPage" : "",
+}
+Book = {
+    "bookId" : "",
+    "name" : "",
+    "author" : "",
+    "thumbnailUrl" : "",
+    "totalPage" : "",
+}
+Book = {
+    "bookId" : "",
+    "name" : "",
+    "author" : "",
+    "thumbnailUrl" : "",
+    "totalPage" : "",
+}
+Book = {
+    "bookId" : "",
+    "name" : "",
+    "author" : "",
+    "thumbnailUrl" : "",
+    "totalPage" : "",
+}
+Book = {
+    "bookId" : "",
+    "name" : "",
+    "author" : "",
+    "thumbnailUrl" : "",
+    "totalPage" : "",
+}
+
+
+
+
+
+
+2책의 내것 4개씩 남으것 6개의 포스트.
+총 15개
+Post = {
+    "id"  : "",
+    "bookId"  : "",
+    "create"  : "",
+    "update"  : "",
+    "userId"  : "",
+    "userNickname"  : "",
+    "userProfileUrl"  : "",
+    "page"  : "",
+    "content"  : "",
+    "imageUrl"  : "",
+    "themeName"  : "",
+    "likeCount"  : "",
+    "replyCount"  : "",
+}
