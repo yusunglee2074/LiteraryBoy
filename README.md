@@ -57,5 +57,5 @@ npm의 디폴트 디렉토리를 변경
 
 
 # DB 관련
-[데이터베이스 ERD](http://imgur.com/a/44a5y) 2월 19일
-![w0aij5w.jpg](https://bitbucket.org/repo/qK8kx5/images/3543223138-w0aij5w.jpg)
+
+![데이터베이스 ERD](http://imgur.com/a/44a5y) 2월 19일
